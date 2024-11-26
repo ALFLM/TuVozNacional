@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const partidos = [
     { nombre: "PSOE", escaños: 120 },
-    { nombre: "PP", escaños: 89 },
-    { nombre: "VOX", escaños: 52 },
-    { nombre: "SUMAR", escaños: 33 },
+    { nombre: "PP", escaños: 137 },
+    { nombre: "VOX", escaños: 33 },
+    { nombre: "SUMAR", escaños: 27 },
   ];
 
   const contenedorPartidos = document.getElementById("partidos");
@@ -24,16 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
     contenedorPartidos.appendChild(div);
   });
 
-  // Manejar votos
+  // Inicializar votos
   const votos = partidos.map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
   contenedorPartidos.addEventListener("click", (e) => {
     const button = e.target;
     if (button.tagName === "BUTTON") {
       const partidoIndex = button.dataset.partido;
       const voto = button.dataset.voto;
-      votos[partidoIndex][voto]++;
-      document.getElementById(`votos-${partidoIndex}`).innerText =
-        `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
+
+      // Asegurar que solo se pueda votar una vez por partido
+      if (votos[partidoIndex][voto] === 0) {
+        votos[partidoIndex][voto]++;
+        document.getElementById(`votos-${partidoIndex}`).innerText =
+          `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
+      }
     }
   });
 
