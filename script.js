@@ -24,20 +24,28 @@ document.addEventListener("DOMContentLoaded", () => {
     contenedorPartidos.appendChild(div);
   });
 
-  // Inicializar votos
+  // Manejar votos (permitir un solo voto por partido)
   const votos = partidos.map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
+  const votosRealizados = new Array(partidos.length).fill(null); // Array para rastrear el voto de cada usuario
+
   contenedorPartidos.addEventListener("click", (e) => {
     const button = e.target;
     if (button.tagName === "BUTTON") {
       const partidoIndex = button.dataset.partido;
       const voto = button.dataset.voto;
 
-      // Asegurar que solo se pueda votar una vez por partido
-      if (votos[partidoIndex][voto] === 0) {
-        votos[partidoIndex][voto]++;
-        document.getElementById(`votos-${partidoIndex}`).innerText =
-          `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
+      // Si el usuario ya ha votado, elimina su voto anterior
+      if (votosRealizados[partidoIndex] !== null) {
+        votos[partidoIndex][votosRealizados[partidoIndex]]--;
       }
+
+      // Asigna el nuevo voto
+      votos[partidoIndex][voto]++;
+      votosRealizados[partidoIndex] = voto; // Guarda el voto actual del usuario
+
+      // Actualiza la visualización de los votos
+      document.getElementById(`votos-${partidoIndex}`).innerText =
+        `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
     }
   });
 
