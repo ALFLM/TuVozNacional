@@ -32,12 +32,12 @@ h2 {
   border-radius: 10px;
   padding: 1.5rem;
   width: 250px;
-  height: 350px; /* Tamaño ajustado */
+  height: 150px; /* Ajustado para los hexágonos horizontales */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añadimos sombra para darle un efecto más visible */
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); /* Forma hexagonal */
+  clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%); /* Forma hexagonal horizontal */
   transition: transform 0.3s ease;
 }
 
@@ -48,23 +48,25 @@ h2 {
 .partido h3 {
   text-align: center;
   margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  line-height: 1.4;
 }
 
-/* Colores según partido */
+/* Colores más apagados y mate según partido */
 .partido.pp {
-  background-color: #0074d9; /* Azul para PP */
+  background-color: rgba(0, 116, 217, 0.7); /* Azul mate para PP */
 }
 
 .partido.psoe {
-  background-color: #d32f2f; /* Rojo para PSOE */
+  background-color: rgba(211, 47, 47, 0.7); /* Rojo mate para PSOE */
 }
 
 .partido.vox {
-  background-color: #388e3c; /* Verde para VOX */
+  background-color: rgba(56, 142, 60, 0.7); /* Verde mate para VOX */
 }
 
 .partido.sumar {
-  background-color: #f06292; /* Rosa palo para SUMAR */
+  background-color: rgba(240, 98, 146, 0.7); /* Rosa palo mate para SUMAR */
 }
 
 button {
