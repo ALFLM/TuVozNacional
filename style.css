@@ -31,18 +31,40 @@ h2 {
   border: 2px solid #ddd;
   border-radius: 10px;
   padding: 1.5rem;
-  background: #fff;
   width: 250px;
   height: 350px; /* Tamaño ajustado */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añadimos sombra para darle un efecto más visible */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); /* Forma hexagonal */
+  transition: transform 0.3s ease;
+}
+
+.partido:hover {
+  transform: scale(1.05); /* Efecto de agrandado al pasar el ratón */
 }
 
 .partido h3 {
   text-align: center;
   margin: 0 0 1rem 0;
+}
+
+/* Colores según partido */
+.partido.pp {
+  background-color: #0074d9; /* Azul para PP */
+}
+
+.partido.psoe {
+  background-color: #d32f2f; /* Rojo para PSOE */
+}
+
+.partido.vox {
+  background-color: #388e3c; /* Verde para VOX */
+}
+
+.partido.sumar {
+  background-color: #f06292; /* Rosa palo para SUMAR */
 }
 
 button {

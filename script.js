@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const partidos = [
-    { nombre: "PSOE", escaños: 120 },
-    { nombre: "PP", escaños: 137 },
-    { nombre: "VOX", escaños: 33 },
-    { nombre: "SUMAR", escaños: 27 },
+    { nombre: "PSOE", escaños: 120, clase: "psoe" },
+    { nombre: "PP", escaños: 137, clase: "pp" },
+    { nombre: "VOX", escaños: 33, clase: "vox" },
+    { nombre: "SUMAR", escaños: 27, clase: "sumar" },
   ];
 
   const contenedorPartidos = document.getElementById("partidos");
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Generar tarjetas de partidos
   partidos.sort((a, b) => b.escaños - a.escaños).forEach((partido, index) => {
     const div = document.createElement("div");
-    div.classList.add("partido");
+    div.classList.add("partido", partido.clase); // Añadimos la clase correspondiente de color
     div.innerHTML = `
       <h3>${partido.nombre} (${partido.escaños} escaños)</h3>
       <div>
