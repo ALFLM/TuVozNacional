@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // API Key y URL para obtener noticias más específicas de política en España usando Currents API
     const API_KEY = "PJ-hY4UPPKZSQbHi3HG7TzrruKLv-Z8fUix0dnXUbGbO-6Jg";
-    const API_URL = `https://api.currentsapi.services/v1/search?category=politics&language=es&keywords=España,gobierno,partidos,política&apiKey=${API_KEY}`;
+    const API_URL = `https://api.currentsapi.services/v1/search?category=politics&language=es&keywords=España,elecciones,gobierno,partidos,política&apiKey=${API_KEY}`;
   
     const listaNoticias = document.getElementById("lista-noticias");
   
@@ -14,9 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Datos recibidos:", data); // Verificar la estructura de los datos
+        console.log("Respuesta completa de la API:", data); // Verificamos toda la respuesta
   
-        const noticias = data.news.slice(0, 5); // Solo las primeras 5 noticias
+        // Verificamos si hay noticias en la respuesta
+        const noticias = data.news ? data.news.slice(0, 5) : []; // Extraemos las primeras 5 noticias, si hay alguna
   
         if (noticias.length === 0) {
           listaNoticias.innerHTML = "<li>No hay noticias disponibles en este momento.</li>";
