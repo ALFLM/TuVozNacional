@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // API Key y URL para obtener noticias más específicas de política en España usando Currents API
-    const API_KEY_NEWSAPI = "d735f99b524847128f76cb8072fdbd6f";
-    const API_URL_NEWSAPI = `https://newsapi.org/v2/everything?q=política+españa&language=es&apiKey=${API_KEY_NEWSAPI}`;
+    const API_KEY = "d735f99b524847128f76cb8072fdbd6f";
+    const API_URL = `https://newsapi.org/v2/everything?q=política+españa&language=es&apiKey=${API_KEY}`;
     
   
     const listaNoticias = document.getElementById("lista-noticias");
