@@ -7,19 +7,31 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Obtener noticias de la API
     fetch(API_URL)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Datos recibidos:", data);
-      // Procesar los datos...
-    })
-    .catch((error) => {
-      console.error("Error al obtener noticias:", error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const noticias = data.response.results; // Asegurarse de acceder correctamente a los datos
+        if (noticias.length === 0) {
+          listaNoticias.innerHTML = "<li>No hay noticias disponibles en este momento.</li>";
+          return;
+        }
+        noticias.forEach((noticia) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <a href="${noticia.webUrl}" target="_blank" rel="noopener noreferrer">
+              ${noticia.webTitle}
+            </a>`;
+          listaNoticias.appendChild(li);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al obtener noticias:", error);
+        listaNoticias.innerHTML = "<li>Error al cargar las noticias. Inténtalo más tarde.</li>";
+      });
   
     // Manejar publicaciones
     const formPublicaciones = document.getElementById("form-publicaciones");
