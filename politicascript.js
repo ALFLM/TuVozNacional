@@ -14,18 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then((data) => {
-        const noticias = data.response.results; // Asegurarse de acceder correctamente a los datos
-        if (noticias.length === 0) {
-          listaNoticias.innerHTML = "<li>No hay noticias disponibles en este momento.</li>";
-          return;
-        }
+        console.log("Datos recibidos:", data);
+        const noticias = data.response.results.slice(0, 5); // Solo las primeras 5 noticias
+  
         noticias.forEach((noticia) => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <a href="${noticia.webUrl}" target="_blank" rel="noopener noreferrer">
-              ${noticia.webTitle}
-            </a>`;
-          listaNoticias.appendChild(li);
+          const noticiaElement = document.createElement("div");
+          noticiaElement.classList.add("noticia");
+  
+          noticiaElement.innerHTML = `
+            <h3>${noticia.webTitle}</h3>
+            <p>${noticia.fields.trailText || 'No hay resumen disponible'}</p>
+            <p class="fecha">${new Date(noticia.webPublicationDate).toLocaleDateString()}</p>
+            <a href="${noticia.webUrl}" class="leer-mas" target="_blank">Leer más</a>
+          `;
+  
+          listaNoticias.appendChild(noticiaElement);
         });
       })
       .catch((error) => {
