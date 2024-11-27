@@ -27,13 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
           const noticiaElement = document.createElement("div");
           noticiaElement.classList.add("noticia");
   
-          // Verificar que 'trailText' exista en la noticia
-          const resumen = noticia.fields?.trailText || 'No hay resumen disponible';
+          // Obtenemos la fuente de la noticia
+          const fuente = noticia.source ? noticia.source : 'Fuente no disponible';
           const fecha = noticia.webPublicationDate ? new Date(noticia.webPublicationDate).toLocaleDateString() : 'Fecha no disponible';
   
           noticiaElement.innerHTML = `
             <h3>${noticia.webTitle}</h3>
-            <p>${resumen}</p>
+            <p class="fuente">Fuente: ${fuente}</p>
             <p class="fecha">${fecha}</p>
             <a href="${noticia.webUrl}" class="leer-mas" target="_blank">Leer más</a>
           `;
