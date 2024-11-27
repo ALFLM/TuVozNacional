@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const API_KEY = "PJ-hY4UPPKZSQbHi3HG7TzrruKLv-Z8fUix0dnXUbGbO-6Jg";
     
     // Aquí estamos ajustando la búsqueda para intentar filtrar más específicamente por 'politica españa'
-    const API_URL = `https://api.currentsapi.services/v1/search?keywords=politica+españa&language=es&apiKey=${API_KEY}`;
+    const API_URL = `https://api.currentsapi.services/v1/search?keywords=españa&language=es&apiKey=${API_KEY}`;
   
     const listaNoticias = document.getElementById("lista-noticias");
   
