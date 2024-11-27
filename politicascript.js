@@ -1,12 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // API Key y URL para obtener noticias específicas de política en España
-    const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
-    const API_URL = `https://content.guardianapis.com/search?q=politica+españa&section=politics&api-key=${API_KEY}&page-size=5`;
-
+    // API Key y URL para obtener noticias específicas de política en España usando Currents API
+    const API_KEY = "PJ-hY4UPPKZSQbHi3HG7TzrruKLv-Z8fUix0dnXUbGbO-6Jg";
+    const API_URL = `https://api.currentsapi.services/v1/search?category=politics&language=es&apiKey=${API_KEY}`;
   
     const listaNoticias = document.getElementById("lista-noticias");
   
-    // Obtener noticias de la API
+    // Obtener noticias de la API de Currents
     fetch(API_URL)
       .then((response) => {
         if (!response.ok) {
@@ -17,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         console.log("Datos recibidos:", data); // Verificar la estructura de los datos
   
-        const noticias = data.response.results.slice(0, 5); // Solo las primeras 5 noticias
+        const noticias = data.news.slice(0, 5); // Solo las primeras 5 noticias
   
         if (noticias.length === 0) {
           listaNoticias.innerHTML = "<li>No hay noticias disponibles en este momento.</li>";
@@ -29,14 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
           noticiaElement.classList.add("noticia");
   
           // Obtenemos la fuente de la noticia
-          const fuente = noticia.source ? noticia.source : 'Fuente no disponible';
-          const fecha = noticia.webPublicationDate ? new Date(noticia.webPublicationDate).toLocaleDateString() : 'Fecha no disponible';
+          const fuente = noticia.author ? noticia.author : 'Fuente no disponible';
+          const fecha = noticia.published ? new Date(noticia.published).toLocaleDateString() : 'Fecha no disponible';
   
           noticiaElement.innerHTML = `
-            <h3>${noticia.webTitle}</h3>
+            <h3>${noticia.title}</h3>
             <p class="fuente">Fuente: ${fuente}</p>
             <p class="fecha">${fecha}</p>
-            <a href="${noticia.webUrl}" class="leer-mas" target="_blank">Leer más</a>
+            <a href="${noticia.url}" class="leer-mas" target="_blank">Leer más</a>
           `;
   
           listaNoticias.appendChild(noticiaElement);
