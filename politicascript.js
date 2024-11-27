@@ -14,17 +14,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Datos recibidos:", data);
+        console.log("Datos recibidos:", data); // Verificar la estructura de los datos
+  
         const noticias = data.response.results.slice(0, 5); // Solo las primeras 5 noticias
+  
+        if (noticias.length === 0) {
+          listaNoticias.innerHTML = "<li>No hay noticias disponibles en este momento.</li>";
+          return;
+        }
   
         noticias.forEach((noticia) => {
           const noticiaElement = document.createElement("div");
           noticiaElement.classList.add("noticia");
   
+          // Verificar que 'trailText' exista en la noticia
+          const resumen = noticia.fields?.trailText || 'No hay resumen disponible';
+          const fecha = noticia.webPublicationDate ? new Date(noticia.webPublicationDate).toLocaleDateString() : 'Fecha no disponible';
+  
           noticiaElement.innerHTML = `
             <h3>${noticia.webTitle}</h3>
-            <p>${noticia.fields.trailText || 'No hay resumen disponible'}</p>
-            <p class="fecha">${new Date(noticia.webPublicationDate).toLocaleDateString()}</p>
+            <p>${resumen}</p>
+            <p class="fecha">${fecha}</p>
             <a href="${noticia.webUrl}" class="leer-mas" target="_blank">Leer más</a>
           `;
   
