@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // API Key y URL para obtener noticias más específicas de política en España usando Currents API
     const API_KEY = "PJ-hY4UPPKZSQbHi3HG7TzrruKLv-Z8fUix0dnXUbGbO-6Jg";
-    const API_URL = `https://api.currentsapi.services/v1/search?category=politics&language=es&keywords=España,elecciones,gobierno,partidos,política&apiKey=${API_KEY}`;
+    const API_URL = `https://api.currentsapi.services/v1/search?category=politics&language=es&keywords=España,gobierno,partidos,psoe,pp,vox,sumar,política&apiKey=${API_KEY}`;
   
     const listaNoticias = document.getElementById("lista-noticias");
   
