@@ -1,25 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
     // API Key y URL para obtener noticias
-    const API_KEY = "d735f99b524847128f76cb8072fdbd6f";
-    const API_URL = `https://newsapi.org/v2/everything?q=política españa&language=es&apiKey=${API_KEY}`;
+    const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
+    const API_URL = `https://content.guardianapis.com/search?q=politics&section=world&api-key=${API_KEY}`;
   
     const listaNoticias = document.getElementById("lista-noticias");
   
     // Obtener noticias de la API
     fetch(API_URL)
-      .then((response) => response.json())
-      .then((data) => {
-        data.articles.slice(0, 5).forEach((article) => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <a href="${article.url}" target="_blank">${article.title}</a>
-          `;
-          listaNoticias.appendChild(li);
-        });
-      })
-      .catch((error) => {
-        console.error("Error al obtener noticias:", error);
-      });
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Datos recibidos:", data);
+      // Procesar los datos...
+    })
+    .catch((error) => {
+      console.error("Error al obtener noticias:", error);
+    });
   
     // Manejar publicaciones
     const formPublicaciones = document.getElementById("form-publicaciones");

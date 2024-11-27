@@ -93,3 +93,25 @@ footer {
   text-align: center;
   padding: 1rem;
 }
+
+nav {
+    margin-top: 10px;
+  }
+  
+  nav .volver {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: #0074d9;
+    padding: 0.5rem 1rem;
+    border: 1px solid #0074d9;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  nav .volver:hover {
+    background-color: #0074d9;
+    color: #fff;
+  }
+  
