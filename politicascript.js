@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     // API Key y URL para obtener noticias específicas de política en España
     const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
-    const API_URL = `https://content.guardianapis.com/search?q=politica+españa&api-key=${API_KEY}&page-size=5`;
+    const API_URL = `https://content.guardianapis.com/search?q=politica+españa&section=politics&api-key=${API_KEY}&page-size=5`;
+
   
     const listaNoticias = document.getElementById("lista-noticias");
   
