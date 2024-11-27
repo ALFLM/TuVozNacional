@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // API Key y URL para obtener noticias específicas de política en España
-    const API_KEY = "d735f99b524847128f76cb8072fdbd6f"; // NewsAPI
-    const API_URL = `https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/everything?q=política españa&language=es&apiKey=${API_KEY}`;
+    const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
+    const API_URL = `https://content.guardianapis.com/search?q=politica+españa&api-key=${API_KEY}&page-size=5`;
   
     const listaNoticias = document.getElementById("lista-noticias");
   
