@@ -1,4 +1,8 @@
-/* Estilos generales */
+/* Establecer box-sizing para todos los elementos */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -8,8 +12,8 @@ body {
 }
 
 header {
-  background-color: #0074d9;
-  color: #fff;
+  background-color: #005a87;
+  color: white;
   padding: 2rem;
 }
 
@@ -23,7 +27,7 @@ header p {
   font-size: 1.2rem;
 }
 
-/* Navegación */
+/* Estilos de navegación */
 .navegacion-enlaces {
   display: flex;
   justify-content: space-between;
@@ -33,7 +37,7 @@ header p {
 
 .navegacion-enlaces a {
   text-decoration: none;
-  color: #0074d9;
+  color: #005a87;
   font-weight: bold;
   padding: 0.5rem 1rem;
   background-color: #f1f1f1;
@@ -42,30 +46,34 @@ header p {
 }
 
 .navegacion-enlaces a:hover {
-  background-color: #0074d9;
+  background-color: #005a87;
   color: #fff;
 }
 
 /* Secciones principales */
 #secciones {
   display: flex;
-  justify-content: center;
-  gap: 2rem; /* Espacio entre las secciones */
-  margin-top: 2rem;
+  justify-content: space-between; /* Asegura que las secciones estén distribuidas entre los dos lados */
+  margin-top: 3rem;
+  padding: 0 2rem;
+  flex-wrap: wrap; /* Permite que las secciones se ajusten en pantallas pequeñas */
 }
 
 .seccion {
-  width: 45%; /* Cada sección ocupa el 45% del contenedor */
+  flex: 0 1 48%; /* Las secciones ocuparán el 48% del contenedor, con espacio entre ellas */
   padding: 2rem;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
-  position: relative;
   cursor: pointer;
-  background-size: cover; /* Asegura que el fondo se ajuste bien */
-  background-position: center;
-  color: white;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  margin-bottom: 2rem; /* Espacio entre las secciones */
+}
+
+.seccion:hover {
+  transform: translateY(-10px); /* Efecto hover para mayor interactividad */
 }
 
 .seccion h3 {
@@ -80,7 +88,7 @@ header p {
 
 .seccion a.boton {
   padding: 1rem 2rem;
-  background-color: #0074d9;
+  background-color: #005a87;
   color: white;
   font-size: 1.1rem;
   text-decoration: none;
@@ -89,7 +97,7 @@ header p {
 }
 
 .seccion a.boton:hover {
-  background-color: #005bb5;
+  background-color: #005a87;
 }
 
 /* Fondo económico con gráfico */
@@ -98,14 +106,16 @@ header p {
   background-size: cover;
   background-position: center;
   color: white;
+  padding: 3rem 2rem; /* Ajuste de padding para que no cubra el contenido */
 }
 
-/* Fondo político con martillo */
 .seccion.politica {
   background-image: url('martillo.jpg'); /* Reemplaza con la URL de la imagen del martillo */
   background-size: cover;
   background-position: center;
   color: white;
+  padding: 3rem 2rem; /* Ajuste de padding para que no cubra el contenido */
+  order: 2; /* Asegura que la política esté al final (lado derecho) */
 }
 
 /* Estilos para otras secciones */
@@ -119,7 +129,7 @@ section {
 }
 
 section h2 {
-  color: #0074d9;
+  color: #005a87;
   font-size: 2rem;
 }
 
@@ -153,12 +163,22 @@ footer {
 /* Responsivo */
 @media (max-width: 768px) {
   #secciones {
-    flex-direction: column; /* Cambia de fila a columna en pantallas pequeñas */
+    flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
     gap: 1rem;
+    padding: 0 1rem;
   }
 
   .seccion {
-    width: 100%; /* Las secciones ocupan el 100% del ancho */
+    width: 100%; /* Las secciones ocupan todo el ancho en pantallas pequeñas */
     padding: 1.5rem;
+  }
+
+  /* Reducir tamaño de las fuentes en pantallas pequeñas */
+  .seccion h3 {
+    font-size: 1.5rem;
+  }
+
+  .seccion p {
+    font-size: 1rem;
   }
 }

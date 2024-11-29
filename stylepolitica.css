@@ -8,7 +8,7 @@ body {
 }
 
 header {
-  background-color: #0074d9;
+  background-color: #005a87;
   color: #fff;
   padding: 2rem;
 }
@@ -22,7 +22,7 @@ main {
 }
 
 h2 {
-  color: #0074d9;
+  color: #005a87;
   margin-bottom: 1rem;
 }
 
@@ -52,7 +52,7 @@ h2 {
   
   .noticia h3 {
     font-size: 1.4rem;
-    color: #0074d9;
+    color: #005a87;
     margin-bottom: 0.5rem;
   }
   
@@ -71,7 +71,7 @@ h2 {
   .noticia .leer-mas {
     display: inline-block;
     margin-top: 1rem;
-    color: #0074d9;
+    color: #005a87;
     text-decoration: none;
     font-weight: bold;
   }
@@ -93,7 +93,7 @@ h2 {
 }
 
 #publicaciones button {
-  background-color: #0074d9;
+  background-color: #005a87;
   color: #fff;
   padding: 0.5rem 1rem;
   border: none;
@@ -103,7 +103,7 @@ h2 {
 }
 
 #publicaciones button:hover {
-  background-color: #005bb5;
+  background-color: #005a87;
 }
 
 #lista-publicaciones .publicacion {
@@ -194,7 +194,7 @@ h2 {
   display: inline-block;
   margin-top: 1rem;
   padding: 1rem 2rem;
-  background-color: #0074d9;
+  background-color: #005a87;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -203,7 +203,7 @@ h2 {
 }
 
 #acceso .boton:hover {
-  background-color: #005bb5;
+  background-color: #005a87;
 }
 
 /* Footer */
@@ -222,15 +222,15 @@ nav .volver {
   display: inline-block;
   text-decoration: none;
   font-size: 0.9rem;
-  color: #0074d9;
+  color: #005a87;
   padding: 0.5rem 1rem;
-  border: 1px solid #0074d9;
+  border: 1px solid #005a87;
   border-radius: 5px;
   background-color: #fff;
   transition: background-color 0.3s, color 0.3s;
 }
 
 nav .volver:hover {
-  background-color: #0074d9;
+  background-color: #005a87;
   color: #fff;
 }
