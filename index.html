@@ -3,47 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio - Política en España</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Inicio - TuVoz Política</title>
+  <link rel="stylesheet" href="styleindex.css">
 </head>
 <body>
   <header>
-    <h1>TuVoz Política en España</h1>
-    <p>Explora las últimas noticias, publica tus opiniones y evalúa los comentarios de otros usuarios.</p>
+    <h1>Bienvenidos a TuVoz</h1>
+    <p>Tu plataforma para explorar, opinar y evaluar el rumbo de la política y economía en España.</p>
   </header>
 
+  <nav>
+    <ul>
+      <li><a href="#secciones">Secciones</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="#registro">Registro</a></li>
+      <li><a href="#apoyar">Apoya el Proyecto</a></li>
+    </ul>
+  </nav>
+
   <main>
-    <!-- Sección de Noticias -->
-    <section id="noticias">
-      <h2>Últimas Noticias</h2>
-      <ul id="lista-noticias" class="noticias-lista">
-        <!-- Las noticias se cargarán dinámicamente con JavaScript -->
+    <!-- Introducción al proyecto -->
+    <section id="introduccion">
+      <h2>Sobre TuVoz</h2>
+      <p>
+        TuVoz es una plataforma interactiva donde los ciudadanos pueden participar activamente en los temas de política y economía de España. Aquí podrás:
+      </p>
+      <ul>
+        <li>Explorar noticias y análisis actualizados.</li>
+        <li>Compartir tus opiniones y debatir con otros ciudadanos.</li>
+        <li>Evaluar las acciones de partidos y políticos a nivel nacional y regional.</li>
       </ul>
     </section>
 
-    <!-- Sección de Publicaciones -->
-    <section id="publicaciones">
-      <h2>Publica tu Opinión</h2>
-      <form id="form-publicaciones">
-        <textarea placeholder="Escribe tu publicación aquí..." required></textarea>
-        <button type="submit">Publicar</button>
-      </form>
-      <div id="lista-publicaciones">
-        <!-- Las publicaciones se agregarán dinámicamente -->
+    <!-- Acceso a secciones principales -->
+    <section id="secciones">
+      <h2>Explora nuestras secciones</h2>
+      <div class="seccion">
+        <h3>Política Nacional</h3>
+        <p>Evalúa las acciones de los partidos políticos nacionales y comparte tu voz.</p>
+        <a href="politica_nacional.html" class="boton">Ir a Política Nacional</a>
+      </div>
+      <div class="seccion">
+        <h3>Política Regional</h3>
+        <p>Participa en debates sobre las decisiones políticas en tu comunidad autónoma.</p>
+        <a href="regionalindex.html" class="boton">Ir a Política Regional</a>
+      </div>
+      <div class="seccion">
+        <h3>Economía</h3>
+        <p>Analiza las medidas económicas y cómo afectan a la sociedad.</p>
+        <a href="economiaindex.html" class="boton">Ir a Economía</a>
       </div>
     </section>
 
-    <!-- Botón para acceder a Tu Voz Nacional -->
-    <section id="acceso">
-      <h2>Participa Más</h2>
-      <a href="nacionalindex.html" class="boton">Ir a Valoración de Partidos</a>
+    <!-- Otras funcionalidades -->
+    <section id="contacto">
+      <h2>Contáctanos</h2>
+      <p>¿Tienes preguntas o sugerencias? Escríbenos y estaremos encantados de escucharte.</p>
+      <a href="contacto.html" class="boton">Ir a Contacto</a>
+    </section>
+
+    <section id="registro">
+      <h2>Regístrate</h2>
+      <p>Únete a nuestra comunidad y empieza a participar activamente.</p>
+      <a href="registro.html" class="boton">Registrarse</a>
+    </section>
+
+    <section id="apoyar">
+      <h2>Apoya nuestro proyecto</h2>
+      <p>Tu ayuda nos permite seguir desarrollando herramientas para fomentar la participación ciudadana.</p>
+      <a href="apoyar.html" class="boton">Descubre cómo apoyar</a>
     </section>
   </main>
 
   <footer>
-    <p>Política en España &copy; 2024</p>
+    <p>TuVoz Política en España &copy; 2024</p>
   </footer>
 
-  <script src="politicascript.js"></script>
+  <script src="scriptindex.js"></script>
 </body>
 </html>

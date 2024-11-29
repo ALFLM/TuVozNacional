@@ -1,0 +1,147 @@
+/* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+header {
+  background-color: #0074d9;
+  color: #fff;
+  padding: 2rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+header p {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* Navegación */
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background-color: #005bb5;
+  padding: 1rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover,
+nav ul li a.activo {
+  color: #ffdd57;
+}
+
+/* Secciones */
+section {
+  padding: 3rem 1rem;
+  margin: 2rem auto;
+  background-color: #fff;
+  border-radius: 10px;
+  max-width: 800px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+  color: #0074d9;
+  font-size: 2rem;
+}
+
+section p {
+  font-size: 1rem;
+  color: #333;
+  margin: 1rem 0;
+}
+
+.seccion {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.seccion h3 {
+  font-size: 1.5rem;
+  color: #005bb5;
+}
+
+.seccion a.boton {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: #0074d9;
+  color: #fff;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.seccion a.boton:hover {
+  background-color: #005bb5;
+}
+
+/* Animación inicial */
+section, header, nav {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+section.mostrar, header.mostrar, nav.mostrar {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Estilos para otras secciones */
+#registro, #contacto, #apoyar {
+  background-color: #f1f1f1;
+}
+
+#registro p, #contacto p, #apoyar p {
+  color: #555;
+}
+
+#registro a.boton, #contacto a.boton, #apoyar a.boton {
+  background-color: #28a745;
+}
+
+#registro a.boton:hover, #contacto a.boton:hover, #apoyar a.boton:hover {
+  background-color: #218838;
+}
+
+/* Footer */
+footer {
+  background-color: #ddd;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  .seccion {
+    align-items: flex-start;
+  }
+}
