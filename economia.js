@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
     
     // Aquí estamos ajustando la búsqueda para filtrar noticias de economía
-    const API_URL = `https://content.guardianapis.com/search?q=economics&section=world&api-key=${API_KEY}`;
+    const API_URL = `https://content.guardianapis.com/search?q=economiy&section=world&api-key=${API_KEY}`;
   
     const listaNoticias = document.getElementById("lista-noticias");
   

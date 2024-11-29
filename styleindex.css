@@ -25,29 +25,90 @@ header p {
 
 /* Navegación */
 .navegacion-enlaces {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
-  }
-  
-  .navegacion-enlaces a {
-    text-decoration: none;
-    color: #0074d9;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    background-color: #f1f1f1;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .navegacion-enlaces a:hover {
-    background-color: #0074d9;
-    color: #fff;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
 
-/* Secciones */
+.navegacion-enlaces a {
+  text-decoration: none;
+  color: #0074d9;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navegacion-enlaces a:hover {
+  background-color: #0074d9;
+  color: #fff;
+}
+
+/* Secciones principales */
+#secciones {
+  display: flex;
+  justify-content: center;
+  gap: 2rem; /* Espacio entre las secciones */
+  margin-top: 2rem;
+}
+
+.seccion {
+  width: 45%; /* Cada sección ocupa el 45% del contenedor */
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  background-size: cover; /* Asegura que el fondo se ajuste bien */
+  background-position: center;
+  color: white;
+}
+
+.seccion h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.seccion p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.seccion a.boton {
+  padding: 1rem 2rem;
+  background-color: #0074d9;
+  color: white;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.seccion a.boton:hover {
+  background-color: #005bb5;
+}
+
+/* Fondo económico con gráfico */
+.seccion.economia {
+  background-image: url('brujula.jpg'); /* Reemplaza con la URL de la imagen del gráfico */
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+/* Fondo político con martillo */
+.seccion.politica {
+  background-image: url('martillo.jpg'); /* Reemplaza con la URL de la imagen del martillo */
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+/* Estilos para otras secciones */
 section {
   padding: 3rem 1rem;
   margin: 2rem auto;
@@ -68,34 +129,6 @@ section p {
   margin: 1rem 0;
 }
 
-.seccion {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.seccion h3 {
-  font-size: 1.5rem;
-  color: #005bb5;
-}
-
-.seccion a.boton {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  background-color: #0074d9;
-  color: #fff;
-  font-size: 1.1rem;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.seccion a.boton:hover {
-  background-color: #005bb5;
-}
-
 /* Animación inicial */
 section, header, nav {
   opacity: 0;
@@ -106,23 +139,6 @@ section, header, nav {
 section.mostrar, header.mostrar, nav.mostrar {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* Estilos para otras secciones */
-#registro, #contacto, #apoyar {
-  background-color: #f1f1f1;
-}
-
-#registro p, #contacto p, #apoyar p {
-  color: #555;
-}
-
-#registro a.boton, #contacto a.boton, #apoyar a.boton {
-  background-color: #28a745;
-}
-
-#registro a.boton:hover, #contacto a.boton:hover, #apoyar a.boton:hover {
-  background-color: #218838;
 }
 
 /* Footer */
@@ -136,11 +152,13 @@ footer {
 
 /* Responsivo */
 @media (max-width: 768px) {
-  nav ul {
-    flex-direction: column;
+  #secciones {
+    flex-direction: column; /* Cambia de fila a columna en pantallas pequeñas */
+    gap: 1rem;
   }
 
   .seccion {
-    align-items: flex-start;
+    width: 100%; /* Las secciones ocupan el 100% del ancho */
+    padding: 1.5rem;
   }
 }
