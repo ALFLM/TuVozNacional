@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mensajeCargando = document.getElementById("cargando-noticias");
 
   // Mostrar mensaje mientras se cargan las noticias
-  mensajeCargando.style.display = "block";
+  listaNoticias.innerHTML = "<li>Esperando mientras cargamos todas las noticias...</li>";
 
   // Obtener noticias de la API de Currents
   fetch(API_URL)
