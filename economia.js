@@ -30,7 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      noticias.forEach((noticia) => {
+      // Limitamos a las primeras 5 noticias
+      const noticiasLimitadas = noticias.slice(0, 5); // Solo tomamos las primeras 5 noticias
+
+      noticiasLimitadas.forEach((noticia) => {
         const noticiaElement = document.createElement("div");
         noticiaElement.classList.add("noticia");
 
