@@ -48,29 +48,36 @@ nav.main-nav ul li a:hover {
 
 .sections .cards {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 15px; /* Espaciado entre tarjetas */
 }
 
 .card {
   background: #f4f4f4;
   border: 1px solid #ddd;
   border-radius: 5px;
-  width: 45%;
+  width: 45%; /* Establecer un ancho base */
   margin: 15px 0;
   text-align: center;
   overflow: hidden;
+  transition: transform 0.3s ease; /* Efecto de hover para tarjetas */
 }
 
 .card img {
   width: 100%;
   height: auto;
+  object-fit: cover; /* Asegura que la imagen cubra el contenedor */
 }
 
 .card-title {
   padding: 15px;
   background: #005a87;
   color: #fff;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Efecto de hover para las tarjetas */
 }
 
 .btn {
@@ -80,10 +87,11 @@ nav.main-nav ul li a:hover {
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .btn:hover {
-  background: #005a87;
+  background: #003f61; /* Color más oscuro en hover */
 }
 
 footer.main-footer {
@@ -108,4 +116,55 @@ footer .social-links li {
 footer .social-links img {
   width: 25px;
   height: 25px;
+}
+
+/* Media Queries para mejorar la visualización en dispositivos móviles */
+@media (max-width: 768px) {
+  /* En pantallas pequeñas, las tarjetas deben ocupar más espacio */
+  .card {
+    width: 100%; /* Las tarjetas ocupan todo el ancho */
+    margin: 10px 0;
+  }
+
+  /* El contenedor de navegación se vuelve vertical en pantallas pequeñas */
+  nav.main-nav ul {
+    flex-direction: column;
+  }
+
+  nav.main-nav ul li {
+    margin: 5px 0;
+  }
+
+  /* Reducción de tamaño de las imágenes para que se ajusten bien en móviles */
+  .card img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Mejorar la apariencia del footer en móviles */
+  footer.main-footer {
+    padding: 15px 0;
+  }
+
+  footer .social-links {
+    flex-direction: column;
+  }
+
+  footer .social-links li {
+    margin: 5px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  header.main-header {
+    padding: 15px 0;
+  }
+
+  .btn {
+    padding: 8px 16px;
+  }
+
+  footer.main-footer {
+    padding: 10px 0;
+  }
 }
