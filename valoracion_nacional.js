@@ -1,4 +1,22 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
+  authDomain: "tuvoz-dae95.firebaseapp.com",
+  databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tuvoz-dae95",
+  storageBucket: "tuvoz-dae95.firebasestorage.app",
+  messagingSenderId: "21285165787",
+  appId: "1:21285165787:web:d7f84940999df2935e4afe"
+};
+
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.addEventListener("DOMContentLoaded", async () => {
   const partidos = [
     { nombre: "PSOE", escaños: 120, clase: "psoe" },
     { nombre: "PP", escaños: 137, clase: "pp" },
@@ -11,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Generar tarjetas de partidos
   partidos.sort((a, b) => b.escaños - a.escaños).forEach((partido, index) => {
     const div = document.createElement("div");
-    div.classList.add("partido", partido.clase); // Añadimos la clase correspondiente de color
+    div.classList.add("partido", partido.clase);
     div.innerHTML = `
       <h3>${partido.nombre} (${partido.escaños} escaños)</h3>
       <div>
@@ -24,86 +42,51 @@ document.addEventListener("DOMContentLoaded", () => {
     contenedorPartidos.appendChild(div);
   });
 
-  // Manejar votos (permitir un solo voto por partido)
-  const votos = partidos.map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
-  const votosRealizados = new Array(partidos.length).fill(null); // Array para rastrear el voto de cada usuario
+  // Cargar y manejar los votos
+  const votosRef = collection(db, "votos");
+  const querySnapshot = await getDocs(votosRef);
 
-  contenedorPartidos.addEventListener("click", (e) => {
+  const votos = new Array(partidos.length).fill({ Bien: 0, Neutral: 0, Mal: 0 });
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data.partidoIndex !== undefined) {
+      votos[data.partidoIndex] = data.votos;
+    }
+  });
+
+  // Mostrar los votos
+  function actualizarVotos() {
+    partidos.forEach((partido, index) => {
+      document.getElementById(`votos-${index}`).innerText = `Votos: Bien (${votos[index].Bien}), Neutral (${votos[index].Neutral}), Mal (${votos[index].Mal})`;
+    });
+  }
+
+  actualizarVotos();
+
+  const votosRealizados = new Array(partidos.length).fill(null);
+
+  contenedorPartidos.addEventListener("click", async (e) => {
     const button = e.target;
     if (button.tagName === "BUTTON") {
       const partidoIndex = button.dataset.partido;
       const voto = button.dataset.voto;
 
-      // Si el usuario ya ha votado, elimina su voto anterior
+      // Eliminar el voto anterior si lo hay
       if (votosRealizados[partidoIndex] !== null) {
         votos[partidoIndex][votosRealizados[partidoIndex]]--;
       }
 
-      // Asigna el nuevo voto
+      // Añadir el nuevo voto
       votos[partidoIndex][voto]++;
-      votosRealizados[partidoIndex] = voto; // Guarda el voto actual del usuario
+      votosRealizados[partidoIndex] = voto;
 
-      // Actualiza la visualización de los votos
-      document.getElementById(`votos-${partidoIndex}`).innerText =
-        `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
+      // Guardar los votos en Firestore
+      await updateDoc(doc(db, "votos", partidoIndex.toString()), {
+        votos: votos[partidoIndex]
+      });
+
+      actualizarVotos();
     }
   });
-
-    // Manejar publicaciones
-    const formPublicaciones = document.getElementById("form-publicaciones");
-    const listaPublicaciones = document.getElementById("lista-publicaciones");
-  
-    formPublicaciones.addEventListener("submit", (e) => {
-      e.preventDefault();
-  
-      const texto = formPublicaciones.querySelector("textarea").value;
-      if (!texto.trim()) return;
-  
-      const publicacion = document.createElement("div");
-      publicacion.classList.add("publicacion");
-  
-      publicacion.innerHTML = `
-        <p>${texto}</p>
-        <div class="acciones">
-          <button class="like">👍 0</button>
-          <button class="dislike">👎 0</button>
-        </div>
-      `;
-  
-      // Manejar likes y dislikes únicos por usuario
-      let userVote = null; // Variable para rastrear el voto del usuario en esta publicación
-  
-      const likeButton = publicacion.querySelector(".like");
-      const dislikeButton = publicacion.querySelector(".dislike");
-  
-      likeButton.addEventListener("click", () => {
-        if (userVote === "like") {
-          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
-          userVote = null;
-        } else {
-          if (userVote === "dislike") {
-            dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
-          }
-          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) + 1}`;
-          userVote = "like";
-        }
-      });
-  
-      dislikeButton.addEventListener("click", () => {
-        if (userVote === "dislike") {
-          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
-          userVote = null;
-        } else {
-          if (userVote === "like") {
-            likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
-          }
-          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) + 1}`;
-          userVote = "dislike";
-        }
-      });
-  
-      listaPublicaciones.appendChild(publicacion);
-      formPublicaciones.reset();
-    });
-  });
-  
+});

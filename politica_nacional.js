@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getFirestore, collection, addDoc, query, getDocs, orderBy, Timestamp, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, Timestamp, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -17,121 +16,83 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const formPublicaciones = document.getElementById("form-publicaciones");
   const listaPublicaciones = document.getElementById("lista-publicaciones");
 
-  // Manejar el submit del formulario
-  formPublicaciones.addEventListener("submit", (e) => {
+  // Cargar publicaciones desde Firebase
+  const publicacionesRef = collection(db, "publicaciones");
+  const q = query(publicacionesRef, orderBy("timestamp", "desc"));
+  const querySnapshot = await getDocs(q);
+  
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    crearPublicacion(data.texto, data.timestamp);
+  });
+
+  // Crear nueva publicación
+  formPublicaciones.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const usuario = formPublicaciones.querySelector("#usuario").value.trim();
-    const texto = formPublicaciones.querySelector("#contenido").value.trim();
+    const texto = formPublicaciones.querySelector("textarea").value;
+    if (!texto.trim()) return;
 
-    if (!usuario || !texto) {
-      alert("Por favor, completa todos los campos antes de publicar.");
-      return;
-    }
+    // Crear publicación en Firebase
+    const docRef = await addDoc(collection(db, "publicaciones"), {
+      texto: texto,
+      timestamp: Timestamp.fromDate(new Date())
+    });
 
-    // Guardar publicación en Firebase
-    guardarPublicacion(usuario, texto);
-
-    // Limpiar el formulario
+    // Crear visualmente la publicación
+    crearPublicacion(texto, docRef.id);
+    
     formPublicaciones.reset();
   });
 
-  // **Firebase setup**
+  function crearPublicacion(texto, id) {
+    const publicacion = document.createElement("div");
+    publicacion.classList.add("publicacion");
+    publicacion.id = id;
 
-  // Función para guardar la publicación en Firestore
-// Función para guardar la publicación en Firestore
-function guardarPublicacion(usuario, texto) {
-  const fecha = Timestamp.now();
-  addDoc(collection(db, "publicaciones"), {
-    usuario: usuario,
-    contenido: texto,
-    fecha: fecha,
-    likes: 0,
-    dislikes: 0
-  })
-  .then((docRef) => {
-    console.log("Publicación guardada con ID:", docRef.id);
-    obtenerPublicaciones(); // Recargar las publicaciones después de añadir una nueva
-  })
-  .catch((error) => {
-    console.error("Error añadiendo el documento: ", error);
-  });
-}
+    publicacion.innerHTML = `
+      <p>${texto}</p>
+      <div class="acciones">
+        <button class="like">👍 0</button>
+        <button class="dislike">👎 0</button>
+      </div>
+    `;
 
+    let userVote = null;
 
-  // Función para obtener las publicaciones desde Firestore
-  function obtenerPublicaciones() {
-    const publicacionesRef = collection(db, "publicaciones");
-    const q = query(publicacionesRef, orderBy("fecha", "desc"));
+    const likeButton = publicacion.querySelector(".like");
+    const dislikeButton = publicacion.querySelector(".dislike");
 
-    getDocs(q)
-      .then((querySnapshot) => {
-        listaPublicaciones.innerHTML = ""; // Limpiar la lista de publicaciones antes de renderizar
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const publicacion = document.createElement("div");
-          publicacion.classList.add("publicacion");
-          publicacion.setAttribute("data-id", doc.id); // Guardar el ID para usarlo en las acciones
+    likeButton.addEventListener("click", () => {
+      if (userVote === "like") {
+        likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
+        userVote = null;
+      } else {
+        if (userVote === "dislike") {
+          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
+        }
+        likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) + 1}`;
+        userVote = "like";
+      }
+    });
 
-          publicacion.innerHTML = `
-            <strong>${data.usuario}</strong>
-            <p>${data.contenido}</p>
-            <div class="acciones">
-              <button class="like">👍 ${data.likes}</button>
-              <button class="dislike">👎 ${data.dislikes}</button>
-            </div>
-          `;
+    dislikeButton.addEventListener("click", () => {
+      if (userVote === "dislike") {
+        dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
+        userVote = null;
+      } else {
+        if (userVote === "like") {
+          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
+        }
+        dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) + 1}`;
+        userVote = "dislike";
+      }
+    });
 
-          // Agregar la publicación a la lista
-          listaPublicaciones.appendChild(publicacion);
-
-          // Manejar los botones de like y dislike
-          const likeButton = publicacion.querySelector(".like");
-          const dislikeButton = publicacion.querySelector(".dislike");
-
-          likeButton.addEventListener("click", () => {
-            actualizarVoto(doc.id, "likes");
-          });
-
-          dislikeButton.addEventListener("click", () => {
-            actualizarVoto(doc.id, "dislikes");
-          });
-        });
-      })
-      .catch((error) => {
-        console.error("Error al obtener las publicaciones: ", error);
-      });
+    listaPublicaciones.appendChild(publicacion);
   }
-
-// Función para actualizar el voto (like o dislike) en Firestore
-function actualizarVoto(docId, tipo) {
-  const docRef = doc(db, "publicaciones", docId);
-
-  // Obtener el documento y actualizar el contador de votos
-  getDoc(docRef).then((docSnap) => { // Cambia getDocs por getDoc
-    if (docSnap.exists()) {
-      const currentData = docSnap.data();
-      const nuevosVotos = currentData[tipo] + 1; // Incrementar el conteo de votos
-
-      // Actualizar la base de datos con el nuevo valor
-      updateDoc(docRef, {
-        [tipo]: nuevosVotos
-      })
-      .then(() => {
-        obtenerPublicaciones(); // Volver a cargar las publicaciones con los votos actualizados
-      })
-      .catch((error) => {
-        console.error("Error actualizando los votos: ", error);
-      });
-    }
-  });
-}
-
-
-  // Llamada a obtener publicaciones al cargar la página
-  obtenerPublicaciones();
 });
