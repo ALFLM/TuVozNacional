@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -42,49 +42,64 @@ document.addEventListener("DOMContentLoaded", async () => {
     contenedorPartidos.appendChild(div);
   });
 
-  // Cargar y manejar los votos
-  const votosRef = collection(db, "votos");
-  const querySnapshot = await getDocs(votosRef);
+  // Inicializar votos en Firestore
+  const partidosRef = collection(db, "partidos");
+  const votos = new Array(partidos.length).fill(null).map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
 
-  const votos = new Array(partidos.length).fill({ Bien: 0, Neutral: 0, Mal: 0 });
+  const querySnapshot = await getDocs(partidosRef);
 
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    if (data.partidoIndex !== undefined) {
-      votos[data.partidoIndex] = data.votos;
+  querySnapshot.forEach((docSnapshot) => {
+    const data = docSnapshot.data();
+    const partidoIndex = partidos.findIndex((p) => p.nombre === docSnapshot.id);
+    if (partidoIndex >= 0) {
+      votos[partidoIndex] = data.votos;
     }
   });
 
+  // Asegurarse de que todos los documentos existen en Firestore
+  await Promise.all(
+    partidos.map(async (partido, index) => {
+      const docRef = doc(db, "partidos", partido.nombre);
+      const docSnapshot = querySnapshot.docs.find((doc) => doc.id === partido.nombre);
+      if (!docSnapshot) {
+        await setDoc(docRef, { votos: votos[index] });
+      }
+    })
+  );
+
   // Mostrar los votos
   function actualizarVotos() {
-    partidos.forEach((partido, index) => {
-      document.getElementById(`votos-${index}`).innerText = `Votos: Bien (${votos[index].Bien}), Neutral (${votos[index].Neutral}), Mal (${votos[index].Mal})`;
+    partidos.forEach((_, index) => {
+      const { Bien, Neutral, Mal } = votos[index];
+      document.getElementById(`votos-${index}`).innerText = `Votos: Bien (${Bien}), Neutral (${Neutral}), Mal (${Mal})`;
     });
   }
 
   actualizarVotos();
 
+  // Manejar los votos de los usuarios
   const votosRealizados = new Array(partidos.length).fill(null);
 
   contenedorPartidos.addEventListener("click", async (e) => {
     const button = e.target;
     if (button.tagName === "BUTTON") {
-      const partidoIndex = button.dataset.partido;
+      const partidoIndex = parseInt(button.dataset.partido);
       const voto = button.dataset.voto;
 
-      // Eliminar el voto anterior si lo hay
-      if (votosRealizados[partidoIndex] !== null) {
+      if (isNaN(partidoIndex) || !voto) return;
+
+      // Eliminar el voto anterior si existe
+      if (votosRealizados[partidoIndex]) {
         votos[partidoIndex][votosRealizados[partidoIndex]]--;
       }
 
-      // Añadir el nuevo voto
+      // Registrar el nuevo voto
       votos[partidoIndex][voto]++;
       votosRealizados[partidoIndex] = voto;
 
-      // Guardar los votos en Firestore
-      await updateDoc(doc(db, "votos", partidoIndex.toString()), {
-        votos: votos[partidoIndex]
-      });
+      // Actualizar Firestore
+      const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
+      await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
 
       actualizarVotos();
     }
