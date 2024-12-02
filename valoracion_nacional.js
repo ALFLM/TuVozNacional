@@ -5,8 +5,9 @@ import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore"
 const firebaseConfig = {
   apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
   authDomain: "tuvoz-dae95.firebaseapp.com",
+  databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "tuvoz-dae95",
-  storageBucket: "tuvoz-dae95.appspot.com",
+  storageBucket: "tuvoz-dae95.firebasestorage.app",
   messagingSenderId: "21285165787",
   appId: "1:21285165787:web:d7f84940999df2935e4afe"
 };
