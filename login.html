@@ -17,23 +17,25 @@
     <p>¿No tienes cuenta? <a href="register.html">Regístrate</a></p>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js"></script>
-  <script>
-    // Firebase configuration
+  <script type="module">
+    // Importar Firebase SDK (versión modular)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+
+    // Configuración de Firebase
     const firebaseConfig = {
-  apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
-  authDomain: "tuvoz-dae95.firebaseapp.com",
-  databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "tuvoz-dae95",
-  storageBucket: "tuvoz-dae95.firebasestorage.app",
-  messagingSenderId: "21285165787",
-  appId: "1:21285165787:web:d7f84940999df2935e4afe"
-};
+      apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
+      authDomain: "tuvoz-dae95.firebaseapp.com",
+      databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "tuvoz-dae95",
+      storageBucket: "tuvoz-dae95.firebasestorage.app",
+      messagingSenderId: "21285165787",
+      appId: "1:21285165787:web:d7f84940999df2935e4afe"
+    };
 
     // Inicializar Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
     // Referencia al formulario y campos
     const formLogin = document.getElementById('formLogin');
@@ -49,7 +51,7 @@
 
       try {
         // Iniciar sesión con correo y contraseña
-        await firebase.signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, email, password);
 
         alert('Inicio de sesión exitoso');
         // Redirigir al usuario o hacer otras acciones
