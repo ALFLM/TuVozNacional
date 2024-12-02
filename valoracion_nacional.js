@@ -69,20 +69,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   const partidosRef = collection(db, "partidos");
   const querySnapshot = await getDocs(partidosRef);
 
-  querySnapshot.forEach((docSnapshot) => {
-    const data = docSnapshot.data();
-    const partidoIndex = partidos.findIndex((p) => p.nombre === docSnapshot.id);
-    if (partidoIndex >= 0) {
-      votos[partidoIndex] = data.votos;
-    }
-  });
-
   await Promise.all(
     partidos.map(async (partido, index) => {
       const docRef = doc(db, "partidos", partido.nombre);
-      const docSnapshot = querySnapshot.docs.find((doc) => doc.id === partido.nombre);
-      if (!docSnapshot) {
-        await setDoc(docRef, { votos: votos[index] });
+      const docSnapshot = await getDoc(docRef);
+
+      if (!docSnapshot.exists()) {
+        // Crear documento con estructura inicial si no existe
+        await setDoc(docRef, {
+          votos: { Bien: 0, Neutral: 0, Mal: 0 }
+        });
+        console.log(`Documento inicializado para ${partido.nombre}`);
+      } else {
+        // Asegurar que los campos de votos existan
+        const data = docSnapshot.data();
+        const votosActuales = data.votos || {};
+        const camposFaltantes = ["Bien", "Neutral", "Mal"].filter(
+          (campo) => !(campo in votosActuales)
+        );
+
+        if (camposFaltantes.length > 0) {
+          camposFaltantes.forEach((campo) => (votosActuales[campo] = 0));
+          await updateDoc(docRef, { votos: votosActuales });
+          console.log(`Campos actualizados para ${partido.nombre}: ${camposFaltantes.join(", ")}`);
+        }
+        votos[index] = votosActuales;
       }
     })
   );
