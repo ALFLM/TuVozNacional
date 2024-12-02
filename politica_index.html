@@ -52,11 +52,14 @@
 
 
 <!-- Carga Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, getDocs, orderBy, Timestamp, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+</script>
+
 
 <!-- Carga los scripts necesarios -->
-<script src="politica_nacional.js"></script>
+<script type="module" src="politica_nacional.js"></script>
 <script src="valoracion_nacional.js"></script>
 
 </body>

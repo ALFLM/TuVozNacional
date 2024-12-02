@@ -1,5 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, query, getDocs, orderBy, Timestamp, updateDoc, doc } from "firebase/firestore";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+import { getFirestore, collection, addDoc, query, getDocs, orderBy, Timestamp, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+
 
 // Firebase configuration
 const firebaseConfig = {
@@ -42,23 +43,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // **Firebase setup**
 
   // Función para guardar la publicación en Firestore
-  function guardarPublicacion(usuario, texto) {
-    const fecha = Timestamp.now();
-    const docRef = addDoc(collection(db, "publicaciones"), {
-      usuario: usuario,
-      contenido: texto,
-      fecha: fecha,
-      likes: 0,
-      dislikes: 0
-    })
-    .then((docRef) => {
-      console.log("Publicación guardada con ID:", docRef.id);
-      obtenerPublicaciones(); // Recargar las publicaciones después de añadir una nueva
-    })
-    .catch((error) => {
-      console.error("Error añadiendo el documento: ", error);
-    });
-  }
+// Función para guardar la publicación en Firestore
+function guardarPublicacion(usuario, texto) {
+  const fecha = Timestamp.now();
+  addDoc(collection(db, "publicaciones"), {
+    usuario: usuario,
+    contenido: texto,
+    fecha: fecha,
+    likes: 0,
+    dislikes: 0
+  })
+  .then((docRef) => {
+    console.log("Publicación guardada con ID:", docRef.id);
+    obtenerPublicaciones(); // Recargar las publicaciones después de añadir una nueva
+  })
+  .catch((error) => {
+    console.error("Error añadiendo el documento: ", error);
+  });
+}
+
 
   // Función para obtener las publicaciones desde Firestore
   function obtenerPublicaciones() {
@@ -104,29 +107,30 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Función para actualizar el voto (like o dislike) en Firestore
-  function actualizarVoto(docId, tipo) {
-    const docRef = doc(db, "publicaciones", docId);
-    
-    // Obtener el documento y actualizar el contador de votos
-    getDocs(docRef).then((docSnap) => {
-      if (docSnap.exists()) {
-        const currentData = docSnap.data();
-        const nuevosVotos = currentData[tipo] + 1; // Incrementar el conteo de votos
+// Función para actualizar el voto (like o dislike) en Firestore
+function actualizarVoto(docId, tipo) {
+  const docRef = doc(db, "publicaciones", docId);
 
-        // Actualizar la base de datos con el nuevo valor
-        updateDoc(docRef, {
-          [tipo]: nuevosVotos
-        })
-        .then(() => {
-          obtenerPublicaciones(); // Volver a cargar las publicaciones con los votos actualizados
-        })
-        .catch((error) => {
-          console.error("Error actualizando los votos: ", error);
-        });
-      }
-    });
-  }
+  // Obtener el documento y actualizar el contador de votos
+  getDoc(docRef).then((docSnap) => { // Cambia getDocs por getDoc
+    if (docSnap.exists()) {
+      const currentData = docSnap.data();
+      const nuevosVotos = currentData[tipo] + 1; // Incrementar el conteo de votos
+
+      // Actualizar la base de datos con el nuevo valor
+      updateDoc(docRef, {
+        [tipo]: nuevosVotos
+      })
+      .then(() => {
+        obtenerPublicaciones(); // Volver a cargar las publicaciones con los votos actualizados
+      })
+      .catch((error) => {
+        console.error("Error actualizando los votos: ", error);
+      });
+    }
+  });
+}
+
 
   // Llamada a obtener publicaciones al cargar la página
   obtenerPublicaciones();

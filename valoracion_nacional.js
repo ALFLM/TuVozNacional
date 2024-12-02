@@ -1,21 +1,3 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
-
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
-  authDomain: "tuvoz-dae95.firebaseapp.com",
-  databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "tuvoz-dae95",
-  storageBucket: "tuvoz-dae95.firebasestorage.app",
-  messagingSenderId: "21285165787",
-  appId: "1:21285165787:web:d7f84940999df2935e4afe"
-};
-
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 document.addEventListener("DOMContentLoaded", () => {
   const partidos = [
     { nombre: "PSOE", escaños: 120, clase: "psoe" },
@@ -61,30 +43,67 @@ document.addEventListener("DOMContentLoaded", () => {
       votos[partidoIndex][voto]++;
       votosRealizados[partidoIndex] = voto; // Guarda el voto actual del usuario
 
-      // Guarda el voto en Firestore
-      guardarVoto(partidos[partidoIndex].nombre, voto);
-
       // Actualiza la visualización de los votos
-      document.getElementById(`votos-${partidoIndex}`).textContent = `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
+      document.getElementById(`votos-${partidoIndex}`).innerText =
+        `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
     }
   });
 
-  // **Funciones Firebase para guardar votos**
-  function guardarVoto(partido, voto) {
-    const usuario = "nombre_de_usuario"; // Usa el nombre del usuario actual
-
-    // Guardar voto en Firebase Firestore
-    addDoc(collection(db, "votos"), {
-      usuario: usuario,
-      partido: partido,
-      voto: voto,
-      fecha: Timestamp.now()
-    })
-    .then(() => {
-      console.log("Voto guardado correctamente");
-    })
-    .catch((error) => {
-      console.error("Error al guardar el voto: ", error);
+    // Manejar publicaciones
+    const formPublicaciones = document.getElementById("form-publicaciones");
+    const listaPublicaciones = document.getElementById("lista-publicaciones");
+  
+    formPublicaciones.addEventListener("submit", (e) => {
+      e.preventDefault();
+  
+      const texto = formPublicaciones.querySelector("textarea").value;
+      if (!texto.trim()) return;
+  
+      const publicacion = document.createElement("div");
+      publicacion.classList.add("publicacion");
+  
+      publicacion.innerHTML = `
+        <p>${texto}</p>
+        <div class="acciones">
+          <button class="like">👍 0</button>
+          <button class="dislike">👎 0</button>
+        </div>
+      `;
+  
+      // Manejar likes y dislikes únicos por usuario
+      let userVote = null; // Variable para rastrear el voto del usuario en esta publicación
+  
+      const likeButton = publicacion.querySelector(".like");
+      const dislikeButton = publicacion.querySelector(".dislike");
+  
+      likeButton.addEventListener("click", () => {
+        if (userVote === "like") {
+          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
+          userVote = null;
+        } else {
+          if (userVote === "dislike") {
+            dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
+          }
+          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) + 1}`;
+          userVote = "like";
+        }
+      });
+  
+      dislikeButton.addEventListener("click", () => {
+        if (userVote === "dislike") {
+          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
+          userVote = null;
+        } else {
+          if (userVote === "like") {
+            likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
+          }
+          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) + 1}`;
+          userVote = "dislike";
+        }
+      });
+  
+      listaPublicaciones.appendChild(publicacion);
+      formPublicaciones.reset();
     });
-  }
-});
+  });
+  
