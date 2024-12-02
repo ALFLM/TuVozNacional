@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio - TuVoz Política</title>
   <link rel="stylesheet" href="styleindex.css">
 </head>
 <body>
-  <header>
-    <h1>Bienvenido a TuVoz</h1>
-    <p>Tu plataforma para explorar, opinar y evaluar el rumbo de la política y economía en España.</p>
+  <header class="main-header">
+    <div class="container">
+      <h1>TuVoz</h1>
+      <p>Explora, opina y evalúa el rumbo de España.</p>
+    </div>
   </header>
 
-  <nav>
-    <ul>
+  <nav class="main-nav">
+    <ul class="nav-links">
       <li><a href="#secciones">Secciones</a></li>
       <li><a href="#contacto">Contacto</a></li>
       <li><a href="#registro">Registro</a></li>
@@ -26,53 +28,70 @@
   </nav>
 
   <main>
-    <section id="introduccion">
-      <h2>¡Bienvenido a TuVoz!</h2>
-      <p>
-        En TuVoz, puedes ser parte activa del debate sobre los temas más importantes de España. 
-        Únete a la conversación sobre *política* y *economía* de una manera sencilla y accesible.
-      </p>
-      <p>
-        Explora nuestras secciones y empieza a compartir tu opinión sobre lo que está pasando en el país.
-      </p>
-    </section>
-
-    <section id="secciones">
-      <div class="seccion">
-        <a href="politica_index.html" class="politica">
-          <img src="images/martillo.jpg" alt="Política">
-          <h3>Política</h3>
-        </a>
-      </div>
-      <div class="seccion">
-        <a href="economia_index.html" class="economia">
-          <img src="images/brujula.jpg" alt="Economía">
-          <h3>Economía</h3>
-        </a>
+    <section id="introduccion" class="intro-section">
+      <div class="container">
+        <h2>¡Bienvenido a TuVoz!</h2>
+        <p>En TuVoz, puedes ser parte activa del debate sobre los temas más importantes de España. 
+          Únete a la conversación sobre <strong>política</strong> y <strong>economía</strong> de una manera sencilla y accesible.
+        </p>
+        <p>Explora nuestras secciones y empieza a compartir tu opinión sobre lo que está pasando en el país.</p>
       </div>
     </section>
 
-    <section id="contacto">
-      <h2>Contáctanos</h2>
-      <p>¿Tienes preguntas o sugerencias? Escríbenos y estaremos encantados de escucharte.</p>
-      <a href="contacto.html" class="boton">Ir a Contacto</a>
+    <section id="secciones" class="sections">
+      <div class="container">
+        <h2>Nuestras Secciones</h2>
+        <div class="cards">
+          <div class="card">
+            <a href="politica_index.html" class="card-link">
+              <img src="images/martillo.jpg" alt="Política" class="card-img">
+              <h3 class="card-title">Política</h3>
+            </a>
+          </div>
+          <div class="card">
+            <a href="economia_index.html" class="card-link">
+              <img src="images/brujula.jpg" alt="Economía" class="card-img">
+              <h3 class="card-title">Economía</h3>
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="registro">
-      <h2>Regístrate</h2>
-      <p>Únete a nuestra comunidad y empieza a participar activamente.</p>
-      <a href="registro.html" class="boton">Registrarse</a>
+    <section id="contacto" class="contact-section">
+      <div class="container">
+        <h2>Contáctanos</h2>
+        <p>¿Tienes preguntas o sugerencias? Escríbenos y estaremos encantados de escucharte.</p>
+        <a href="contacto.html" class="btn">Ir a Contacto</a>
+      </div>
     </section>
 
-    <section id="apoyar">
-      <h2>Apoya nuestro proyecto</h2>
-      <p>Tu ayuda nos permite seguir desarrollando herramientas para fomentar la participación ciudadana.</p>
-      <a href="apoyar.html" class="boton">Descubre cómo apoyar</a>
+    <section id="registro" class="register-section">
+      <div class="container">
+        <h2>Regístrate</h2>
+        <p>Únete a nuestra comunidad y empieza a participar activamente.</p>
+        <a href="registro.html" class="btn">Registrarse</a>
+      </div>
+    </section>
+
+    <section id="apoyar" class="support-section">
+      <div class="container">
+        <h2>Apoya nuestro proyecto</h2>
+        <p>Tu ayuda nos permite seguir desarrollando herramientas para fomentar la participación ciudadana.</p>
+        <a href="apoyar.html" class="btn">Descubre cómo apoyar</a>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <p>TuVoz Política en España &copy; 2024</p>
+  <footer class="main-footer">
+    <div class="container">
+      <p>TuVoz Política en España &copy; 2024</p>
+      <ul class="social-links">
+        <li><a href="#"><img src="images/facebook-icon.png" alt="Facebook"></a></li>
+        <li><a href="#"><img src="images/twitter-icon.png" alt="Twitter"></a></li>
+        <li><a href="#"><img src="images/instagram-icon.png" alt="Instagram"></a></li>
+      </ul>
+    </div>
   </footer>
 
   <script src="scriptindex.js"></script>
