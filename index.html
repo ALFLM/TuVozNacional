@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio - TuVoz Política</title>
@@ -26,7 +30,7 @@
       <h2>¡Bienvenido a TuVoz!</h2>
       <p>
         En TuVoz, puedes ser parte activa del debate sobre los temas más importantes de España. 
-        Únete a la conversación sobre **política** y **economía** de una manera sencilla y accesible.
+        Únete a la conversación sobre *política* y *economía* de una manera sencilla y accesible.
       </p>
       <p>
         Explora nuestras secciones y empieza a compartir tu opinión sobre lo que está pasando en el país.
@@ -34,7 +38,6 @@
     </section>
 
     <section id="secciones">
-      <h2>Explora nuestras secciones</h2>
       <div class="seccion">
         <a href="politica_index.html" class="politica">
           <img src="images/martillo.jpg" alt="Política">

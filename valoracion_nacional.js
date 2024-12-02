@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
     contenedorPartidos.appendChild(div);
   });
 
+  // **Firebase setup**
+  const db = firebase.firestore();
+
   // Manejar votos (permitir un solo voto por partido)
   const votos = partidos.map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
   const votosRealizados = new Array(partidos.length).fill(null); // Array para rastrear el voto de cada usuario
@@ -43,67 +46,29 @@ document.addEventListener("DOMContentLoaded", () => {
       votos[partidoIndex][voto]++;
       votosRealizados[partidoIndex] = voto; // Guarda el voto actual del usuario
 
+      // Guarda el voto en Firestore
+      guardarVoto(partidos[partidoIndex].nombre, voto);
+
       // Actualiza la visualización de los votos
-      document.getElementById(`votos-${partidoIndex}`).innerText =
-        `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
+      document.getElementById(`votos-${partidoIndex}`).textContent = `Votos: Bien (${votos[partidoIndex].Bien}), Neutral (${votos[partidoIndex].Neutral}), Mal (${votos[partidoIndex].Mal})`;
     }
   });
 
-    // Manejar publicaciones
-    const formPublicaciones = document.getElementById("form-publicaciones");
-    const listaPublicaciones = document.getElementById("lista-publicaciones");
-  
-    formPublicaciones.addEventListener("submit", (e) => {
-      e.preventDefault();
-  
-      const texto = formPublicaciones.querySelector("textarea").value;
-      if (!texto.trim()) return;
-  
-      const publicacion = document.createElement("div");
-      publicacion.classList.add("publicacion");
-  
-      publicacion.innerHTML = `
-        <p>${texto}</p>
-        <div class="acciones">
-          <button class="like">👍 0</button>
-          <button class="dislike">👎 0</button>
-        </div>
-      `;
-  
-      // Manejar likes y dislikes únicos por usuario
-      let userVote = null; // Variable para rastrear el voto del usuario en esta publicación
-  
-      const likeButton = publicacion.querySelector(".like");
-      const dislikeButton = publicacion.querySelector(".dislike");
-  
-      likeButton.addEventListener("click", () => {
-        if (userVote === "like") {
-          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
-          userVote = null;
-        } else {
-          if (userVote === "dislike") {
-            dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
-          }
-          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) + 1}`;
-          userVote = "like";
-        }
-      });
-  
-      dislikeButton.addEventListener("click", () => {
-        if (userVote === "dislike") {
-          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
-          userVote = null;
-        } else {
-          if (userVote === "like") {
-            likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
-          }
-          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) + 1}`;
-          userVote = "dislike";
-        }
-      });
-  
-      listaPublicaciones.appendChild(publicacion);
-      formPublicaciones.reset();
+  // **Funciones Firebase para guardar votos**
+  function guardarVoto(partido, voto) {
+    const usuario = "nombre_de_usuario"; // Usa el nombre del usuario actual
+
+    db.collection("votos").add({
+      usuario: usuario,
+      partido: partido,
+      voto: voto,
+      fecha: firebase.firestore.Timestamp.now()
+    })
+    .then(() => {
+      console.log("Voto guardado correctamente");
+    })
+    .catch((error) => {
+      console.error("Error al guardar el voto: ", error);
     });
-  });
-  
+  }
+});

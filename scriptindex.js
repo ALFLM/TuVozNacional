@@ -1,3 +1,23 @@
+// Importar las funciones necesarias de Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
+
+// Configuración de Firebase (usa la que copiaste desde la consola de Firebase)
+const firebaseConfig = {
+  apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
+  authDomain: "tuvoz-dae95.firebaseapp.com",
+  databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tuvoz-dae95",
+  storageBucket: "tuvoz-dae95.firebasestorage.app",
+  messagingSenderId: "21285165787",
+  appId: "1:21285165787:web:d7f84940999df2935e4afe"
+};
+
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
 // Resaltar la sección activa en el menú al hacer scroll
 document.addEventListener("scroll", () => {
   const secciones = document.querySelectorAll("section");

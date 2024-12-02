@@ -48,6 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
       listaNoticias.innerHTML = "<li>Error al cargar las noticias. Inténtalo más tarde.</li>";
     });
 
+  // **Firebase setup**
+  const db = firebase.firestore();
+
   // Manejar publicaciones
   const formPublicaciones = document.getElementById("form-publicaciones");
   const listaPublicaciones = document.getElementById("lista-publicaciones");
@@ -62,6 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Por favor, completa todos los campos antes de publicar.");
       return;
     }
+
+    // Guardar publicación en Firebase
+    guardarPublicacion(usuario, texto);
 
     const publicacion = document.createElement("div");
     publicacion.classList.add("publicacion");
@@ -109,4 +115,49 @@ document.addEventListener("DOMContentLoaded", () => {
     listaPublicaciones.appendChild(publicacion);
     formPublicaciones.reset();
   });
+
+  // **Funciones Firebase para guardar y obtener publicaciones**
+  function guardarPublicacion(usuario, texto) {
+    const fecha = firebase.firestore.Timestamp.now();
+
+    db.collection("publicaciones").add({
+      usuario: usuario,
+      contenido: texto,
+      fecha: fecha,
+      likes: 0,
+      dislikes: 0
+    })
+    .then((docRef) => {
+      console.log("Publicación guardada con ID:", docRef.id);
+    })
+    .catch((error) => {
+      console.error("Error añadiendo el documento: ", error);
+    });
+  }
+
+  function obtenerPublicaciones() {
+    const listaPublicaciones = document.getElementById("lista-publicaciones");
+    db.collection("publicaciones")
+      .orderBy("fecha", "desc")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const publicacion = document.createElement("div");
+          publicacion.classList.add("publicacion");
+          publicacion.innerHTML = `
+            <strong>${data.usuario}</strong>
+            <p>${data.contenido}</p>
+            <p>${data.fecha.toDate().toLocaleString()}</p>
+          `;
+          listaPublicaciones.appendChild(publicacion);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al obtener las publicaciones: ", error);
+      });
+  }
+
+  // Llamada a obtener publicaciones al cargar
+  obtenerPublicaciones();
 });
