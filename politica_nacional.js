@@ -1,60 +1,25 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, query, getDocs, orderBy, Timestamp, updateDoc, doc } from "firebase/firestore";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
+  authDomain: "tuvoz-dae95.firebaseapp.com",
+  projectId: "tuvoz-dae95",
+  storageBucket: "tuvoz-dae95.appspot.com",
+  messagingSenderId: "21285165787",
+  appId: "1:21285165787:web:d7f84940999df2935e4afe"
+};
+
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.addEventListener("DOMContentLoaded", () => {
-  // API Key y URL para obtener noticias de política
-  const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
-  const API_URL = `https://content.guardianapis.com/search?q=política&api-key=${API_KEY}`;
-
-  const listaNoticias = document.getElementById("lista-noticias");
-
-  // Mostrar mensaje mientras se cargan las noticias
-  listaNoticias.innerHTML = "<li>Esperando mientras cargamos todas las noticias...</li>";
-
-  // Obtener noticias de la API de The Guardian
-  fetch(API_URL)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      const noticias = data.response?.results || [];
-
-      if (noticias.length === 0) {
-        listaNoticias.innerHTML = "<li>No hay noticias disponibles en este momento.</li>";
-        return;
-      }
-
-      listaNoticias.innerHTML = "";
-
-      noticias.slice(0, 5).forEach((noticia) => {
-        const noticiaElement = document.createElement("div");
-        noticiaElement.classList.add("noticia");
-
-        const fecha = noticia.webPublicationDate
-          ? new Date(noticia.webPublicationDate).toLocaleDateString()
-          : "Fecha no disponible";
-
-        noticiaElement.innerHTML = `
-          <h3>${noticia.webTitle}</h3>
-          <p class="fecha">Publicado: ${fecha}</p>
-          <a href="${noticia.webUrl}" class="leer-mas" target="_blank">Leer más</a>
-        `;
-
-        listaNoticias.appendChild(noticiaElement);
-      });
-    })
-    .catch((error) => {
-      console.error("Error al obtener noticias:", error);
-      listaNoticias.innerHTML = "<li>Error al cargar las noticias. Inténtalo más tarde.</li>";
-    });
-
-  // **Firebase setup**
-  const db = firebase.firestore();
-
-  // Manejar publicaciones
   const formPublicaciones = document.getElementById("form-publicaciones");
   const listaPublicaciones = document.getElementById("lista-publicaciones");
 
+  // Manejar el submit del formulario
   formPublicaciones.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -69,58 +34,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Guardar publicación en Firebase
     guardarPublicacion(usuario, texto);
 
-    const publicacion = document.createElement("div");
-    publicacion.classList.add("publicacion");
-
-    publicacion.innerHTML = `
-      <strong>${usuario}</strong>
-      <p>${texto}</p>
-      <div class="acciones">
-        <button class="like">👍 0</button>
-        <button class="dislike">👎 0</button>
-      </div>
-    `;
-
-    let userVote = null;
-
-    const likeButton = publicacion.querySelector(".like");
-    const dislikeButton = publicacion.querySelector(".dislike");
-
-    likeButton.addEventListener("click", () => {
-      if (userVote === "like") {
-        likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
-        userVote = null;
-      } else {
-        if (userVote === "dislike") {
-          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
-        }
-        likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) + 1}`;
-        userVote = "like";
-      }
-    });
-
-    dislikeButton.addEventListener("click", () => {
-      if (userVote === "dislike") {
-        dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
-        userVote = null;
-      } else {
-        if (userVote === "like") {
-          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
-        }
-        dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) + 1}`;
-        userVote = "dislike";
-      }
-    });
-
-    listaPublicaciones.appendChild(publicacion);
+    // Limpiar el formulario
     formPublicaciones.reset();
   });
 
-  // **Funciones Firebase para guardar y obtener publicaciones**
-  function guardarPublicacion(usuario, texto) {
-    const fecha = firebase.firestore.Timestamp.now();
+  // **Firebase setup**
 
-    db.collection("publicaciones").add({
+  // Función para guardar la publicación en Firestore
+  function guardarPublicacion(usuario, texto) {
+    const fecha = Timestamp.now();
+    const docRef = addDoc(collection(db, "publicaciones"), {
       usuario: usuario,
       contenido: texto,
       fecha: fecha,
@@ -129,28 +52,50 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then((docRef) => {
       console.log("Publicación guardada con ID:", docRef.id);
+      obtenerPublicaciones(); // Recargar las publicaciones después de añadir una nueva
     })
     .catch((error) => {
       console.error("Error añadiendo el documento: ", error);
     });
   }
 
+  // Función para obtener las publicaciones desde Firestore
   function obtenerPublicaciones() {
-    const listaPublicaciones = document.getElementById("lista-publicaciones");
-    db.collection("publicaciones")
-      .orderBy("fecha", "desc")
-      .get()
+    const publicacionesRef = collection(db, "publicaciones");
+    const q = query(publicacionesRef, orderBy("fecha", "desc"));
+
+    getDocs(q)
       .then((querySnapshot) => {
+        listaPublicaciones.innerHTML = ""; // Limpiar la lista de publicaciones antes de renderizar
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const publicacion = document.createElement("div");
           publicacion.classList.add("publicacion");
+          publicacion.setAttribute("data-id", doc.id); // Guardar el ID para usarlo en las acciones
+
           publicacion.innerHTML = `
             <strong>${data.usuario}</strong>
             <p>${data.contenido}</p>
-            <p>${data.fecha.toDate().toLocaleString()}</p>
+            <div class="acciones">
+              <button class="like">👍 ${data.likes}</button>
+              <button class="dislike">👎 ${data.dislikes}</button>
+            </div>
           `;
+
+          // Agregar la publicación a la lista
           listaPublicaciones.appendChild(publicacion);
+
+          // Manejar los botones de like y dislike
+          const likeButton = publicacion.querySelector(".like");
+          const dislikeButton = publicacion.querySelector(".dislike");
+
+          likeButton.addEventListener("click", () => {
+            actualizarVoto(doc.id, "likes");
+          });
+
+          dislikeButton.addEventListener("click", () => {
+            actualizarVoto(doc.id, "dislikes");
+          });
         });
       })
       .catch((error) => {
@@ -158,6 +103,30 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Llamada a obtener publicaciones al cargar
+  // Función para actualizar el voto (like o dislike) en Firestore
+  function actualizarVoto(docId, tipo) {
+    const docRef = doc(db, "publicaciones", docId);
+    
+    // Obtener el documento y actualizar el contador de votos
+    getDocs(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        const currentData = docSnap.data();
+        const nuevosVotos = currentData[tipo] + 1; // Incrementar el conteo de votos
+
+        // Actualizar la base de datos con el nuevo valor
+        updateDoc(docRef, {
+          [tipo]: nuevosVotos
+        })
+        .then(() => {
+          obtenerPublicaciones(); // Volver a cargar las publicaciones con los votos actualizados
+        })
+        .catch((error) => {
+          console.error("Error actualizando los votos: ", error);
+        });
+      }
+    });
+  }
+
+  // Llamada a obtener publicaciones al cargar la página
   obtenerPublicaciones();
 });

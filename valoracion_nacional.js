@@ -1,3 +1,20 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
+  authDomain: "tuvoz-dae95.firebaseapp.com",
+  projectId: "tuvoz-dae95",
+  storageBucket: "tuvoz-dae95.appspot.com",
+  messagingSenderId: "21285165787",
+  appId: "1:21285165787:web:d7f84940999df2935e4afe"
+};
+
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.addEventListener("DOMContentLoaded", () => {
   const partidos = [
     { nombre: "PSOE", escaños: 120, clase: "psoe" },
@@ -23,9 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     contenedorPartidos.appendChild(div);
   });
-
-  // **Firebase setup**
-  const db = firebase.firestore();
 
   // Manejar votos (permitir un solo voto por partido)
   const votos = partidos.map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
@@ -58,11 +72,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function guardarVoto(partido, voto) {
     const usuario = "nombre_de_usuario"; // Usa el nombre del usuario actual
 
-    db.collection("votos").add({
+    // Guardar voto en Firebase Firestore
+    addDoc(collection(db, "votos"), {
       usuario: usuario,
       partido: partido,
       voto: voto,
-      fecha: firebase.firestore.Timestamp.now()
+      fecha: Timestamp.now()
     })
     .then(() => {
       console.log("Voto guardado correctamente");
