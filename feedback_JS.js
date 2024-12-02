@@ -1,3 +1,7 @@
+// Importa las funciones necesarias de Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
 // Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
@@ -10,8 +14,8 @@ const firebaseConfig = {
 };
 
 // Inicializa Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app); // Obtener la instancia de Firestore
 
 document.getElementById('contactForm').addEventListener('submit', async function (e) {
   e.preventDefault();
@@ -38,7 +42,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     };
 
     // Guardar el mensaje en Firestore
-    await db.collection('feedback').add(feedbackData);
+    await addDoc(collection(db, 'feedback'), feedbackData);
 
     // Mostrar mensaje de éxito con texto de agradecimiento
     successMessage.textContent = '¡Gracias por tus recomendaciones! Te responderemos pronto.';
