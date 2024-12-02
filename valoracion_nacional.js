@@ -59,11 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await auth.signOut();
   });
 
-  // Redirigir al formulario de registro en ventana emergente
-  function openRegisterWindow() {
-    window.open('register.html', 'Registro', 'width=500,height=600');
-  }
-
   // Generar tarjetas de partidos
   partidos.sort((a, b) => b.escaños - a.escaños).forEach((partido, index) => {
     const div = document.createElement("div");
@@ -128,13 +123,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Si el usuario no está autenticado, mostrar ventana emergente para iniciar sesión
       if (!usuarioAutenticado) {
-        // Mostrar disclaimer
-        alert("Debes estar registrado para votar. Se abrirá una ventana emergente para registrarte.");
-        
-        // Abrir la ventana emergente para el registro
-        openRegisterWindow();
-      } else {
-        // Si está autenticado, registrar el voto
+        alert("Debes estar registrado para votar. Se abrirá una ventana emergente para iniciar sesión.");
+        await signInWithPopup(auth, provider); // Mostrar el popup de login
+      }
+
+      // Una vez autenticado, registrar el voto
+      if (usuarioAutenticado) {
+        // Eliminar el voto anterior si existe
         if (votosRealizados[partidoIndex]) {
           votos[partidoIndex][votosRealizados[partidoIndex]]--;
         }
