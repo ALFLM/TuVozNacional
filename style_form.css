@@ -9,29 +9,69 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
+  padding: 20px;
 }
 
-#registerForm, #loginForm {
+/* Estilo del encabezado */
+header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  color: #4a90e2;
+  margin-bottom: 10px;
+}
+
+header p {
+  color: #333;
+  font-size: 16px;
+}
+
+header .navegacion-enlaces a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+header .navegacion-enlaces a:hover {
+  text-decoration: underline;
+}
+
+/* Estilo de los formularios */
+.container {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  max-width: 100%;
-  margin: 20px;
+  width: 100%;
+  max-width: 600px;
 }
 
-h2 {
+h1 {
   text-align: center;
   color: #333;
   margin-bottom: 20px;
 }
 
-input {
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+input, textarea {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -39,15 +79,14 @@ input {
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
-}
-
-input[type="email"],
-input[type="password"],
-input[type="text"] {
   background-color: #f9f9f9;
 }
 
-input:focus {
+textarea {
+  resize: vertical;
+}
+
+input:focus, textarea:focus {
   border-color: #4a90e2;
   outline: none;
 }
@@ -73,10 +112,23 @@ button:active {
   background-color: #2c6a99;
 }
 
-#registerForm, #loginForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Mensajes de éxito/error */
+.message {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+  display: none;
+  border-radius: 4px;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
 p {
@@ -93,4 +145,20 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  input, textarea, button {
+    font-size: 14px;
+  }
 }
