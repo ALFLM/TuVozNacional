@@ -43,16 +43,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Función para iniciar sesión con Google
-  async function login() {
+  document.getElementById("loginBtn").addEventListener("click", async () => {
     try {
-      await signInWithPopup(auth, provider);
+      // Asegurarse de que el popup de login se abre solo al hacer clic
+      const result = await signInWithPopup(auth, provider);
+      // Aquí podríamos hacer algo con el resultado si lo necesitamos
     } catch (error) {
       console.error("Error de autenticación: ", error);
-      alert("Hubo un error al intentar registrarte. Intenta nuevamente.");
     }
-  }
-
-  document.getElementById("loginBtn").addEventListener("click", login);
+  });
 
   // Función para cerrar sesión
   document.getElementById("logoutBtn").addEventListener("click", async () => {
