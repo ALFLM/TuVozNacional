@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, setDoc, increment } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -10,14 +10,13 @@ const firebaseConfig = {
   projectId: "tuvoz-dae95",
   storageBucket: "tuvoz-dae95.firebasestorage.app",
   messagingSenderId: "21285165787",
-  appId: "1:21285165787:web:d7f84940999df2935e4afe"
+  appId: "1:21285165787:web:d7f84940999df2935e4afe",
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
 document.addEventListener("DOMContentLoaded", async () => {
   const partidos = [
@@ -34,11 +33,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   onAuthStateChanged(auth, (user) => {
     usuarioAutenticado = user;
     if (usuarioAutenticado) {
-      document.getElementById("loginBtn").style.display = "none";  // Ocultar botón de login
-      document.getElementById("logoutBtn").style.display = "block"; // Mostrar botón de logout
+      document.getElementById("loginBtn").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "block";
+
+      // Procesar voto pendiente si existe
+      const votoPendiente = localStorage.getItem("votoPendiente");
+      if (votoPendiente) {
+        const { partidoIndex, voto } = JSON.parse(votoPendiente);
+        localStorage.removeItem("votoPendiente");
+        realizarVoto(partidoIndex, voto);
+      }
     } else {
-      document.getElementById("loginBtn").style.display = "block"; // Mostrar botón de login
-      document.getElementById("logoutBtn").style.display = "none"; // Ocultar botón de logout
+      document.getElementById("loginBtn").style.display = "block";
+      document.getElementById("logoutBtn").style.display = "none";
     }
   });
 
@@ -59,9 +66,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Inicializar votos en Firestore
+  const votos = partidos.map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
   const partidosRef = collection(db, "partidos");
-  const votos = new Array(partidos.length).fill(null).map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
-
   const querySnapshot = await getDocs(partidosRef);
 
   querySnapshot.forEach((docSnapshot) => {
@@ -72,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Asegurarse de que todos los documentos existen en Firestore
+  // Asegurar la existencia de todos los documentos en Firestore
   await Promise.all(
     partidos.map(async (partido, index) => {
       const docRef = doc(db, "partidos", partido.nombre);
@@ -83,20 +89,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
   );
 
-  // Mostrar los votos
-  function actualizarVotos() {
-    partidos.forEach((_, index) => {
-      const { Bien, Neutral, Mal } = votos[index];
-      document.getElementById(`votos-${index}`).innerText = `Votos: Bien (${Bien}), Neutral (${Neutral}), Mal (${Mal})`;
-    });
+  // Actualizar visualización de votos
+  function actualizarVotos(partidoIndex) {
+    const { Bien, Neutral, Mal } = votos[partidoIndex];
+    document.getElementById(`votos-${partidoIndex}`).innerText = `Votos: Bien (${Bien}), Neutral (${Neutral}), Mal (${Mal})`;
   }
 
-  actualizarVotos();
+  partidos.forEach((_, index) => actualizarVotos(index));
 
-  // Manejar los votos de los usuarios
+  // Manejo de votos de usuarios
   const votosRealizados = new Array(partidos.length).fill(null);
 
-  contenedorPartidos.addEventListener("click", async (e) => {
+  async function realizarVoto(partidoIndex, voto) {
+    if (!usuarioAutenticado) return;
+
+    const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
+
+    // Ajustar votos locales y remotos
+    if (votosRealizados[partidoIndex]) {
+      votos[partidoIndex][votosRealizados[partidoIndex]]--;
+      await updateDoc(partidoDoc, {
+        [`votos.${votosRealizados[partidoIndex]}`]: increment(-1),
+      });
+    }
+
+    votos[partidoIndex][voto]++;
+    votosRealizados[partidoIndex] = voto;
+
+    await updateDoc(partidoDoc, {
+      [`votos.${voto}`]: increment(1),
+    });
+
+    actualizarVotos(partidoIndex);
+  }
+
+  contenedorPartidos.addEventListener("click", (e) => {
     const button = e.target;
     if (button.tagName === "BUTTON") {
       const partidoIndex = parseInt(button.dataset.partido);
@@ -104,30 +131,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (isNaN(partidoIndex) || !voto) return;
 
-      // Si el usuario no está autenticado, redirigir al registro
       if (!usuarioAutenticado) {
+        localStorage.setItem("votoPendiente", JSON.stringify({ partidoIndex, voto }));
         alert("Debes estar registrado para votar. Serás redirigido a la página de registro.");
-        window.location.href = "register.html";  // Redirigir a la página de registro
+        window.location.href = "register.html";
         return;
       }
 
-      // Una vez autenticado, registrar el voto
-      if (usuarioAutenticado) {
-        // Eliminar el voto anterior si existe
-        if (votosRealizados[partidoIndex]) {
-          votos[partidoIndex][votosRealizados[partidoIndex]]--;
-        }
-
-        // Registrar el nuevo voto
-        votos[partidoIndex][voto]++;
-        votosRealizados[partidoIndex] = voto;
-
-        // Actualizar Firestore
-        const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
-        await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
-
-        actualizarVotos();
-      }
+      realizarVoto(partidoIndex, voto);
     }
   });
 });

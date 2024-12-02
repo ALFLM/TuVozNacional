@@ -18,56 +18,47 @@
     <p>¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a></p>
   </div>
 
-  <script type="module">
-    // Importar Firebase SDK (versión modular)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 
-    // Configuración de Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
-      authDomain: "tuvoz-dae95.firebaseapp.com",
-      databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "tuvoz-dae95",
-      storageBucket: "tuvoz-dae95.firebasestorage.app",
-      messagingSenderId: "21285165787",
-      appId: "1:21285165787:web:d7f84940999df2935e4afe"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
+    authDomain: "tuvoz-dae95.firebaseapp.com",
+    databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "tuvoz-dae95",
+    storageBucket: "tuvoz-dae95.firebasestorage.app",
+    messagingSenderId: "21285165787",
+    appId: "1:21285165787:web:d7f84940999df2935e4afe"
+  };
 
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    // Referencia al formulario y campos
-    const formRegister = document.getElementById('formRegister');
-    const usernameInput = document.getElementById('username');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
+  const formRegister = document.getElementById("formRegister");
+  const usernameInput = document.getElementById("username");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
 
-    // Función para registrar un nuevo usuario
-    formRegister.addEventListener('submit', async (e) => {
-  e.preventDefault();
+  formRegister.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const username = usernameInput.value;
-  const email = emailInput.value;
-  const password = passwordInput.value;
+    const username = usernameInput.value;
+    const email = emailInput.value;
+    const password = passwordInput.value;
 
-  console.log('Intentando registrar usuario...');
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    console.log('Usuario creado:', userCredential);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      await updateProfile(user, { displayName: username });
 
-    const user = userCredential.user;
-    await updateProfile(user, { displayName: username });
-    console.log('Perfil actualizado:', user);
-
-    alert('Usuario registrado exitosamente');
-  } catch (error) {
-    console.error('Error al registrar usuario:', error);
-    alert('Error al registrar el usuario: ' + error.message);
-  }
-});
-
-  </script>
+      alert("Usuario registrado exitosamente.");
+      window.location.href = "politica_index.html"; // Redirigir al índice después del registro
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      alert("Error al registrar el usuario: " + error.message);
+    }
+  });
+</script>
 </body>
 </html>
