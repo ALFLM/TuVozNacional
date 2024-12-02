@@ -42,20 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Función para iniciar sesión con Google
-  document.getElementById("loginBtn").addEventListener("click", async () => {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Error de autenticación: ", error);
-    }
-  });
-
-  // Función para cerrar sesión
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await auth.signOut();
-  });
-
   // Generar tarjetas de partidos
   partidos.sort((a, b) => b.escaños - a.escaños).forEach((partido, index) => {
     const div = document.createElement("div");
@@ -118,10 +104,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (isNaN(partidoIndex) || !voto) return;
 
-      // Si el usuario no está autenticado, mostrar ventana emergente para iniciar sesión
+      // Si el usuario no está autenticado, redirigir al registro
       if (!usuarioAutenticado) {
-        alert("Debes estar registrado para votar. Se abrirá una ventana emergente para iniciar sesión.");
-        await signInWithPopup(auth, provider); // Mostrar el popup de login
+        alert("Debes estar registrado para votar. Serás redirigido a la página de registro.");
+        window.location.href = "register.html";  // Redirigir a la página de registro
+        return;
       }
 
       // Una vez autenticado, registrar el voto
