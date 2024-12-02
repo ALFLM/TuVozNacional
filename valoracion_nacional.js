@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc, setDoc, increment } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 
 // Firebase configuration
@@ -101,24 +101,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   const votosRealizados = new Array(partidos.length).fill(null);
 
   async function realizarVoto(partidoIndex, voto) {
-    if (!usuarioAutenticado) return;
-
-    const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
+    if (!usuarioAutenticado) {
+      // Guardar el voto pendiente en localStorage
+      localStorage.setItem("votoPendiente", JSON.stringify({ partidoIndex, voto }));
+      alert("Debes estar registrado para votar. Serás redirigido a la página de registro.");
+      window.location.href = "register.html";
+      return;
+    }
 
     // Ajustar votos locales y remotos
     if (votosRealizados[partidoIndex]) {
       votos[partidoIndex][votosRealizados[partidoIndex]]--;
-      await updateDoc(partidoDoc, {
-        [`votos.${votosRealizados[partidoIndex]}`]: increment(-1),
-      });
     }
 
     votos[partidoIndex][voto]++;
     votosRealizados[partidoIndex] = voto;
 
-    await updateDoc(partidoDoc, {
-      [`votos.${voto}`]: increment(1),
-    });
+    const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
+    await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
 
     actualizarVotos(partidoIndex);
   }
@@ -130,13 +130,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const voto = button.dataset.voto;
 
       if (isNaN(partidoIndex) || !voto) return;
-
-      if (!usuarioAutenticado) {
-        localStorage.setItem("votoPendiente", JSON.stringify({ partidoIndex, voto }));
-        alert("Debes estar registrado para votar. Serás redirigido a la página de registro.");
-        window.location.href = "register.html";
-        return;
-      }
 
       realizarVoto(partidoIndex, voto);
     }
