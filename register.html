@@ -46,27 +46,28 @@
 
     // Función para registrar un nuevo usuario
     formRegister.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      const username = usernameInput.value;
-      const email = emailInput.value;
-      const password = passwordInput.value;
+  const username = usernameInput.value;
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
-      try {
-        // Crear un nuevo usuario con Firebase Authentication
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+  console.log('Intentando registrar usuario...');
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log('Usuario creado:', userCredential);
 
-        // Guardar el nombre de usuario
-        await updateProfile(user, { displayName: username });
+    const user = userCredential.user;
+    await updateProfile(user, { displayName: username });
+    console.log('Perfil actualizado:', user);
 
-        alert('Usuario registrado exitosamente');
-        // Redirigir al usuario o hacer otras acciones
-      } catch (error) {
-        console.error('Error al registrar usuario:', error);
-        alert('Error al registrar el usuario. Inténtalo de nuevo.');
-      }
-    });
+    alert('Usuario registrado exitosamente');
+  } catch (error) {
+    console.error('Error al registrar usuario:', error);
+    alert('Error al registrar el usuario: ' + error.message);
+  }
+});
+
   </script>
 </body>
 </html>
