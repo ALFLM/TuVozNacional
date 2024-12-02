@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Política en España</title>
+  <title>TuVoz: Política en España</title>
   <link rel="stylesheet" href="stylepolitica.css">
 </head>
 <body>
   <header>
-    <h1>TuVoz Política en España</h1>
-    <p>Explora las últimas noticias, publica tus opiniones y evalúa los comentarios de otros usuarios.</p>
+    <h1>TuVoz: Política en España</h1>
+    <p>Explora noticias, publica opiniones y evalúa a los partidos políticos.</p>
     <nav class="navegacion-enlaces">
-      <a href="index.html" class="volver">← Volver a Inicio</a>
-      <a href="valoracion_nacional.html" class="volver">Ir a Valoración de Partidos →</a>
+      <a href="#noticias" class="nav-enlace">Noticias</a>
+      <a href="#publicaciones" class="nav-enlace">Publicaciones</a>
+      <a href="#evaluaciones" class="nav-enlace">Evaluación de Partidos</a>
     </nav>
   </header>
 
@@ -37,17 +38,21 @@
       </div>
     </section>
 
-    <!-- Botón para acceder a Tu Voz Nacional -->
-    <section id="acceso">
-      <h2>Participa Más</h2>
-      <a href="valoracion_nacional.html" class="boton">Ir a Valoración de Partidos</a>
+    <!-- Sección de Evaluaciones -->
+    <section id="evaluaciones">
+      <h2>Evaluación de Partidos</h2>
+      <div id="partidos">
+        <!-- Los partidos se generarán dinámicamente con JavaScript -->
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>Política en España &copy; 2024</p>
+    <p>TuVoz &copy; 2024</p>
   </footer>
 
+  <!-- Carga los scripts necesarios -->
   <script src="politica_nacional.js"></script>
+  <script src="valoracion_nacional.js"></script>
 </body>
 </html>
