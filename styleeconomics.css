@@ -35,7 +35,7 @@ header p {
 
 /* Estilo para la navegación de enlaces */
 nav.navegacion-enlaces {
-  display: flex;
+  display: inline-block;
   justify-content: space-between;
   margin-top: 20px;
 }
@@ -108,7 +108,6 @@ main {
 .noticia .leer-mas:hover {
   text-decoration: underline;
 }
-
 
 
 /* Estilo de publicaciones */

@@ -213,24 +213,19 @@ footer {
   margin-top: 2rem;
 }
 
-/* Navegación */
-nav {
-  margin-top: 10px;
-}
-
-nav .volver {
+/* Estilo para la navegación de enlaces */
+nav.navegacion-enlaces {
   display: inline-block;
-  text-decoration: none;
-  font-size: 0.9rem;
-  color: #005a87;
-  padding: 0.5rem 1rem;
-  border: 1px solid #005a87;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: background-color 0.3s, color 0.3s;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
-nav .volver:hover {
-  background-color: #005a87;
-  color: #fff;
+nav.navegacion-enlaces a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav.navegacion-enlaces a:hover {
+  text-decoration: underline;
 }
