@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const publicacionesRef = collection(db, "publicaciones");
   const q = query(publicacionesRef, orderBy("timestamp", "desc"));
   const querySnapshot = await getDocs(q);
-  
+
   querySnapshot.forEach((doc) => {
     const data = doc.data();
-    crearPublicacion(data.texto, data.timestamp);
+    crearPublicacion(data.texto, data.timestamp, doc.id, data.usuario, data.likes, data.dislikes);
   });
 
   // Crear nueva publicación
@@ -35,30 +35,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const texto = formPublicaciones.querySelector("textarea").value;
+    const usuario = formPublicaciones.querySelector("#usuario").value;  // Añadir input para nombre de usuario
     if (!texto.trim()) return;
 
     // Crear publicación en Firebase
     const docRef = await addDoc(collection(db, "publicaciones"), {
       texto: texto,
-      timestamp: Timestamp.fromDate(new Date())
+      timestamp: Timestamp.fromDate(new Date()),
+      usuario: usuario,  // Guardar el nombre de usuario
+      likes: 0,  // Contador de likes
+      dislikes: 0  // Contador de dislikes
     });
 
     // Crear visualmente la publicación
-    crearPublicacion(texto, docRef.id);
+    crearPublicacion(texto, docRef.timestamp, docRef.id, usuario, 0, 0);
     
     formPublicaciones.reset();
   });
 
-  function crearPublicacion(texto, id) {
+  function crearPublicacion(texto, timestamp, id, usuario, likes, dislikes) {
     const publicacion = document.createElement("div");
     publicacion.classList.add("publicacion");
     publicacion.id = id;
 
     publicacion.innerHTML = `
-      <p>${texto}</p>
+      <p><strong>${usuario}</strong>: ${texto}</p>
       <div class="acciones">
-        <button class="like">👍 0</button>
-        <button class="dislike">👎 0</button>
+        <button class="like">👍 ${likes}</button>
+        <button class="dislike">👎 ${dislikes}</button>
       </div>
     `;
 
@@ -67,30 +71,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     const likeButton = publicacion.querySelector(".like");
     const dislikeButton = publicacion.querySelector(".dislike");
 
-    likeButton.addEventListener("click", () => {
+    likeButton.addEventListener("click", async () => {
       if (userVote === "like") {
-        likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
+        likeButton.textContent = `👍 ${likes - 1}`;
         userVote = null;
+        likes--;
       } else {
         if (userVote === "dislike") {
-          dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
+          dislikeButton.textContent = `👎 ${dislikes - 1}`;
+          dislikes--;
         }
-        likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) + 1}`;
+        likeButton.textContent = `👍 ${likes + 1}`;
         userVote = "like";
+        likes++;
       }
+
+      // Actualizar en Firestore
+      await updateDoc(doc(db, "publicaciones", id), { likes: likes, dislikes: dislikes });
     });
 
-    dislikeButton.addEventListener("click", () => {
+    dislikeButton.addEventListener("click", async () => {
       if (userVote === "dislike") {
-        dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) - 1}`;
+        dislikeButton.textContent = `👎 ${dislikes - 1}`;
         userVote = null;
+        dislikes--;
       } else {
         if (userVote === "like") {
-          likeButton.textContent = `👍 ${parseInt(likeButton.textContent.split(" ")[1]) - 1}`;
+          likeButton.textContent = `👍 ${likes - 1}`;
+          likes--;
         }
-        dislikeButton.textContent = `👎 ${parseInt(dislikeButton.textContent.split(" ")[1]) + 1}`;
+        dislikeButton.textContent = `👎 ${dislikes + 1}`;
         userVote = "dislike";
+        dislikes++;
       }
+
+      // Actualizar en Firestore
+      await updateDoc(doc(db, "publicaciones", id), { likes: likes, dislikes: dislikes });
     });
 
     listaPublicaciones.appendChild(publicacion);
