@@ -179,3 +179,20 @@ footer {
   color: white;
   border-radius: 8px;
 }
+
+/* Estilo para la navegación de enlaces */
+nav.navegacion-enlaces {
+  display: inline-block;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+nav.navegacion-enlaces a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav.navegacion-enlaces a:hover {
+  text-decoration: underline;
+}
