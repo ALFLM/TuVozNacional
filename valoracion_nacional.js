@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 
 // Firebase configuration
@@ -65,7 +65,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     contenedorPartidos.appendChild(div);
   });
 
-  // Inicializar votos en Firestore
   const votos = partidos.map(() => ({ Bien: 0, Neutral: 0, Mal: 0 }));
   const partidosRef = collection(db, "partidos");
   const querySnapshot = await getDocs(partidosRef);
@@ -78,7 +77,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Asegurar la existencia de todos los documentos en Firestore
   await Promise.all(
     partidos.map(async (partido, index) => {
       const docRef = doc(db, "partidos", partido.nombre);
@@ -89,7 +87,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
   );
 
-  // Actualizar visualización de votos
   function actualizarVotos(partidoIndex) {
     const { Bien, Neutral, Mal } = votos[partidoIndex];
     document.getElementById(`votos-${partidoIndex}`).innerText = `Votos: Bien (${Bien}), Neutral (${Neutral}), Mal (${Mal})`;
@@ -97,28 +94,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   partidos.forEach((_, index) => actualizarVotos(index));
 
-  // Manejo de votos de usuarios
-  const votosRealizados = new Array(partidos.length).fill(null);
-
   async function realizarVoto(partidoIndex, voto) {
     if (!usuarioAutenticado) {
-      // Guardar el voto pendiente en localStorage
       localStorage.setItem("votoPendiente", JSON.stringify({ partidoIndex, voto }));
       alert("Debes estar registrado para votar. Serás redirigido a la página de registro.");
       window.location.href = "register.html";
       return;
     }
 
-    // Ajustar votos locales y remotos
-    if (votosRealizados[partidoIndex]) {
-      votos[partidoIndex][votosRealizados[partidoIndex]]--;
-    }
-
-    votos[partidoIndex][voto]++;
-    votosRealizados[partidoIndex] = voto;
-
+    const userId = usuarioAutenticado.uid;
     const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
-    await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
+    const userVotoDoc = doc(db, `partidos/${partidos[partidoIndex].nombre}/votos`, userId);
+
+    const userVotoSnapshot = await getDoc(userVotoDoc);
+
+    if (userVotoSnapshot.exists()) {
+      const votoAnterior = userVotoSnapshot.data().voto;
+
+      if (votoAnterior !== voto) {
+        votos[partidoIndex][votoAnterior]--;
+        votos[partidoIndex][voto]++;
+        await updateDoc(userVotoDoc, { voto });
+        await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
+      }
+    } else {
+      votos[partidoIndex][voto]++;
+      await setDoc(userVotoDoc, { voto });
+      await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
+    }
 
     actualizarVotos(partidoIndex);
   }
