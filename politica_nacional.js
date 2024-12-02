@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, Timestamp, updateDoc, doc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, Timestamp, updateDoc, doc, limit, arrayUnion } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -17,10 +17,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // API Key y URL para obtener noticias
+  // API Key y URL para obtener noticias de economía
   const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
-  const API_URL = `https://content.guardianapis.com/search?q=política&api-key=${API_KEY}`;
 
+  // URL de la API con un término de búsqueda relacionado con política
+  const API_URL = `https://content.guardianapis.com/search?q=política&api-key=${API_KEY}`;
   const listaNoticias = document.getElementById("lista-noticias");
 
   // Mostrar mensaje de carga mientras se obtienen las noticias
@@ -64,33 +65,43 @@ document.addEventListener("DOMContentLoaded", async () => {
       listaNoticias.innerHTML = "<li>Error al cargar las noticias. Inténtalo más tarde.</li>";
     });
 
-  // Manejo de publicaciones
   const formPublicaciones = document.getElementById("form-publicaciones");
   const listaPublicaciones = document.getElementById("lista-publicaciones");
 
+  // Cargar publicaciones desde Firebase
   const publicacionesRef = collection(db, "publicaciones");
-  const q = query(publicacionesRef, orderBy("timestamp", "desc"));
+  const q = query(publicacionesRef, orderBy("timestamp", "desc"), limit(3));
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach((doc) => {
     const data = doc.data();
-    crearPublicacion(data.texto, data.timestamp, doc.id, data.usuario, data.likes, data.dislikes, data.respuestas || []);
+    crearPublicacion(
+      data.texto,
+      data.timestamp,
+      doc.id,
+      data.usuario,
+      data.likes,
+      data.dislikes,
+      data.respuestas || []
+    );
   });
 
+  // Crear nueva publicación
   formPublicaciones.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const texto = formPublicaciones.querySelector("textarea").value;
-    const usuario = formPublicaciones.querySelector("#usuario").value;
+    const usuario = formPublicaciones.querySelector("#usuario").value; // Añadir input para nombre de usuario
     if (!texto.trim()) return;
 
+    // Crear publicación en Firebase
     const docRef = await addDoc(collection(db, "publicaciones"), {
-      texto,
+      texto: texto,
       timestamp: Timestamp.fromDate(new Date()),
-      usuario,
-      likes: 0,
-      dislikes: 0,
-      respuestas: []
+      usuario: usuario, // Guardar el nombre de usuario
+      likes: 0, // Contador de likes
+      dislikes: 0, // Contador de dislikes
+      respuestas: [] // Inicializar con un array vacío
     });
 
     crearPublicacion(texto, Timestamp.now(), docRef.id, usuario, 0, 0, []);
@@ -144,6 +155,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       listaRespuestas.appendChild(respuestaElement);
 
       formRespuesta.reset();
+    });
+
+    const likeButton = publicacion.querySelector(".like");
+    const dislikeButton = publicacion.querySelector(".dislike");
+
+    likeButton.addEventListener("click", async () => {
+      likes++;
+      await updateDoc(doc(db, "publicaciones", id), { likes });
+      likeButton.textContent = `👍 ${likes}`;
+    });
+
+    dislikeButton.addEventListener("click", async () => {
+      dislikes++;
+      await updateDoc(doc(db, "publicaciones", id), { dislikes });
+      dislikeButton.textContent = `👎 ${dislikes}`;
     });
 
     listaPublicaciones.appendChild(publicacion);
