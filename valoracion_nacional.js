@@ -63,9 +63,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     div.innerHTML = `
       <h3>${partido.nombre} (${partido.escaños} escaños)</h3>
       <div>
-        <button data-partido="${index}" data-voto="Bien" ${usuarioAutenticado ? '' : 'disabled'}>Bien</button>
-        <button data-partido="${index}" data-voto="Neutral" ${usuarioAutenticado ? '' : 'disabled'}>Neutral</button>
-        <button data-partido="${index}" data-voto="Mal" ${usuarioAutenticado ? '' : 'disabled'}>Mal</button>
+        <button data-partido="${index}" data-voto="Bien">Bien</button>
+        <button data-partido="${index}" data-voto="Neutral">Neutral</button>
+        <button data-partido="${index}" data-voto="Mal">Mal</button>
       </div>
       <p id="votos-${index}">Votos: Bien (0), Neutral (0), Mal (0)</p>
     `;
@@ -118,13 +118,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (isNaN(partidoIndex) || !voto) return;
 
-      // Si el usuario no está autenticado, mostrar pantalla emergente
+      // Si el usuario no está autenticado, mostrar ventana emergente para iniciar sesión
       if (!usuarioAutenticado) {
         alert("Debes estar registrado para votar. Se abrirá una ventana emergente para iniciar sesión.");
         await signInWithPopup(auth, provider); // Mostrar el popup de login
       }
 
-      // Si el usuario está autenticado, continuar con el voto
+      // Una vez autenticado, registrar el voto
       if (usuarioAutenticado) {
         // Eliminar el voto anterior si existe
         if (votosRealizados[partidoIndex]) {
