@@ -68,110 +68,132 @@ document.addEventListener("DOMContentLoaded", async () => {
   const formPublicaciones = document.getElementById("form-publicaciones");
   const listaPublicaciones = document.getElementById("lista-publicaciones");
 
-  // Cargar publicaciones desde Firebase
-  const publicacionesRef = collection(db, "publicaciones");
-  const q = query(publicacionesRef, orderBy("timestamp", "desc"), limit(3));
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    crearPublicacion(
-      data.texto,
-      data.timestamp,
-      doc.id,
-      data.usuario,
-      data.likes,
-      data.dislikes,
-      data.respuestas || []
-    );
-  });
-
-  // Crear nueva publicación
-  formPublicaciones.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const texto = formPublicaciones.querySelector("textarea").value;
-    const usuario = formPublicaciones.querySelector("#usuario").value; // Añadir input para nombre de usuario
-    if (!texto.trim()) return;
-
-    // Crear publicación en Firebase
-    const docRef = await addDoc(collection(db, "publicaciones"), {
-      texto: texto,
-      timestamp: Timestamp.fromDate(new Date()),
-      usuario: usuario, // Guardar el nombre de usuario
-      likes: 0, // Contador de likes
-      dislikes: 0, // Contador de dislikes
-      respuestas: [] // Inicializar con un array vacío
-    });
-
-    crearPublicacion(texto, Timestamp.now(), docRef.id, usuario, 0, 0, []);
-    formPublicaciones.reset();
-  });
-
-  function crearPublicacion(texto, timestamp, id, usuario, likes, dislikes, respuestas) {
-    const publicacion = document.createElement("div");
-    publicacion.classList.add("publicacion");
-    publicacion.id = id;
-
-    publicacion.innerHTML = `
-      <p><strong>${usuario}</strong>: ${texto}</p>
-      <div class="acciones">
-        <button class="like">👍 ${likes}</button>
-        <button class="dislike">👎 ${dislikes}</button>
-      </div>
-      <div class="respuestas">
-        <h4>Respuestas:</h4>
-        <div class="lista-respuestas"></div>
-        <form class="form-respuesta">
-          <input type="text" class="usuario-respuesta" placeholder="Tu nombre" required>
-          <textarea class="texto-respuesta" placeholder="Escribe tu respuesta..." required></textarea>
-          <button type="submit">Responder</button>
-        </form>
-      </div>
-    `;
-
-    const listaRespuestas = publicacion.querySelector(".lista-respuestas");
-    respuestas.forEach((respuesta) => {
-      const respuestaElement = document.createElement("p");
-      respuestaElement.innerHTML = `<strong>${respuesta.usuario}</strong>: ${respuesta.texto}`;
-      listaRespuestas.appendChild(respuestaElement);
-    });
-
-    const formRespuesta = publicacion.querySelector(".form-respuesta");
-    formRespuesta.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const usuarioRespuesta = formRespuesta.querySelector(".usuario-respuesta").value;
-      const textoRespuesta = formRespuesta.querySelector(".texto-respuesta").value;
-      if (!textoRespuesta.trim()) return;
-
-      const nuevaRespuesta = { usuario: usuarioRespuesta, texto: textoRespuesta };
-      await updateDoc(doc(db, "publicaciones", id), {
-        respuestas: arrayUnion(nuevaRespuesta)
-      });
-
-      const respuestaElement = document.createElement("p");
-      respuestaElement.innerHTML = `<strong>${usuarioRespuesta}</strong>: ${textoRespuesta}`;
-      listaRespuestas.appendChild(respuestaElement);
-
-      formRespuesta.reset();
-    });
-
-    const likeButton = publicacion.querySelector(".like");
-    const dislikeButton = publicacion.querySelector(".dislike");
-
-    likeButton.addEventListener("click", async () => {
-      likes++;
-      await updateDoc(doc(db, "publicaciones", id), { likes });
-      likeButton.textContent = `👍 ${likes}`;
-    });
-
-    dislikeButton.addEventListener("click", async () => {
-      dislikes++;
-      await updateDoc(doc(db, "publicaciones", id), { dislikes });
-      dislikeButton.textContent = `👎 ${dislikes}`;
-    });
-
-    listaPublicaciones.appendChild(publicacion);
-  }
-});
+   // Cargar publicaciones desde Firebase
+   const publicacionesRef = collection(db, "publicaciones");
+   const q = query(publicacionesRef, orderBy("timestamp", "desc"));
+   const querySnapshot = await getDocs(q);
+ 
+   querySnapshot.forEach((doc) => {
+     const data = doc.data();
+     crearPublicacion(
+       data.texto,
+       data.timestamp,
+       doc.id,
+       data.usuario,
+       data.likes,
+       data.dislikes,
+       data.respuestas || [],
+       data.votos || {}
+     );
+   });
+ 
+   // Crear nueva publicación
+   formPublicaciones.addEventListener("submit", async (e) => {
+     e.preventDefault();
+ 
+     const texto = formPublicaciones.querySelector("textarea").value;
+     const usuario = formPublicaciones.querySelector("#usuario").value;
+     if (!texto.trim()) return;
+ 
+     // Crear publicación en Firebase
+     const docRef = await addDoc(collection(db, "publicaciones"), {
+       texto: texto,
+       timestamp: Timestamp.fromDate(new Date()),
+       usuario: usuario,
+       likes: 0,
+       dislikes: 0,
+       respuestas: [],
+       votos: {} // Inicializamos votos como un objeto vacío
+     });
+ 
+     crearPublicacion(texto, Timestamp.now(), docRef.id, usuario, 0, 0, [], {});
+     formPublicaciones.reset();
+   });
+ 
+   function crearPublicacion(texto, timestamp, id, usuario, likes, dislikes, respuestas, votos) {
+     const publicacion = document.createElement("div");
+     publicacion.classList.add("publicacion");
+     publicacion.id = id;
+ 
+     publicacion.innerHTML = `
+       <p><strong>${usuario}</strong>: ${texto}</p>
+       <div class="acciones">
+         <button class="like">👍 ${likes}</button>
+         <button class="dislike">👎 ${dislikes}</button>
+       </div>
+       <div class="respuestas">
+         <h4>Respuestas:</h4>
+         <div class="lista-respuestas"></div>
+         <form class="form-respuesta">
+           <input type="text" class="usuario-respuesta" placeholder="Tu nombre" required>
+           <textarea class="texto-respuesta" placeholder="Escribe tu respuesta..." required></textarea>
+           <button type="submit">Responder</button>
+         </form>
+       </div>
+     `;
+ 
+     const listaRespuestas = publicacion.querySelector(".lista-respuestas");
+     respuestas.forEach((respuesta) => {
+       const respuestaElement = document.createElement("p");
+       respuestaElement.innerHTML = `<strong>${respuesta.usuario}</strong>: ${respuesta.texto}`;
+       listaRespuestas.appendChild(respuestaElement);
+     });
+ 
+     const formRespuesta = publicacion.querySelector(".form-respuesta");
+     formRespuesta.addEventListener("submit", async (e) => {
+       e.preventDefault();
+ 
+       const usuarioRespuesta = formRespuesta.querySelector(".usuario-respuesta").value;
+       const textoRespuesta = formRespuesta.querySelector(".texto-respuesta").value;
+       if (!textoRespuesta.trim()) return;
+ 
+       const nuevaRespuesta = { usuario: usuarioRespuesta, texto: textoRespuesta };
+       await updateDoc(doc(db, "publicaciones", id), {
+         respuestas: arrayUnion(nuevaRespuesta)
+       });
+ 
+       const respuestaElement = document.createElement("p");
+       respuestaElement.innerHTML = `<strong>${usuarioRespuesta}</strong>: ${textoRespuesta}`;
+       listaRespuestas.appendChild(respuestaElement);
+ 
+       formRespuesta.reset();
+     });
+ 
+     const likeButton = publicacion.querySelector(".like");
+     const dislikeButton = publicacion.querySelector(".dislike");
+ 
+     likeButton.addEventListener("click", async () => {
+       const currentUser = "user"; // Cambiar por el usuario real
+       if (votos[currentUser] === "like") {
+         likes--;
+         delete votos[currentUser];
+       } else {
+         if (votos[currentUser] === "dislike") dislikes--;
+         likes++;
+         votos[currentUser] = "like";
+       }
+ 
+       await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
+       likeButton.textContent = `👍 ${likes}`;
+       dislikeButton.textContent = `👎 ${dislikes}`;
+     });
+ 
+     dislikeButton.addEventListener("click", async () => {
+       const currentUser = "user"; // Cambiar por el usuario real
+       if (votos[currentUser] === "dislike") {
+         dislikes--;
+         delete votos[currentUser];
+       } else {
+         if (votos[currentUser] === "like") likes--;
+         dislikes++;
+         votos[currentUser] = "dislike";
+       }
+ 
+       await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
+       likeButton.textContent = `👍 ${likes}`;
+       dislikeButton.textContent = `👎 ${dislikes}`;
+     });
+ 
+     listaPublicaciones.appendChild(publicacion);
+   }
+ });
