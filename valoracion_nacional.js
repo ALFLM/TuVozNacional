@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
 import { getFirestore, collection, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -19,6 +19,36 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+let usuarioAutenticado = false;
+
+// Revisa el estado de autenticación al cargar la página
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    usuarioAutenticado = true;
+    document.getElementById("login").style.display = "none"; // Ocultar el botón de inicio de sesión
+    document.getElementById("logout").style.display = "block"; // Mostrar el botón de cierre de sesión
+  } else {
+    usuarioAutenticado = false;
+    document.getElementById("login").style.display = "block"; // Mostrar el botón de inicio de sesión
+    document.getElementById("logout").style.display = "none"; // Ocultar el botón de cierre de sesión
+  }
+});
+
+// Función para iniciar sesión con Google
+document.getElementById("login").addEventListener("click", async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    console.error("Error de inicio de sesión: ", error);
+  }
+});
+
+// Función para cerrar sesión
+document.getElementById("logout").addEventListener("click", async () => {
+  await signOut(auth);
+});
+
+// Lógica para manejar los votos y mostrar los partidos
 document.addEventListener("DOMContentLoaded", async () => {
   const partidos = [
     { nombre: "PSOE", escaños: 120, clase: "psoe" },
@@ -28,33 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   ];
 
   const contenedorPartidos = document.getElementById("partidos");
-  let usuarioAutenticado = null;
-
-  // Verificar si el usuario está autenticado
-  onAuthStateChanged(auth, (user) => {
-    usuarioAutenticado = user;
-    if (usuarioAutenticado) {
-      document.getElementById("loginBtn").style.display = "none";  // Ocultar botón de login
-      document.getElementById("logoutBtn").style.display = "block"; // Mostrar botón de logout
-    } else {
-      document.getElementById("loginBtn").style.display = "block"; // Mostrar botón de login
-      document.getElementById("logoutBtn").style.display = "none"; // Ocultar botón de logout
-    }
-  });
-
-  // Función para iniciar sesión con Google
-  document.getElementById("loginBtn").addEventListener("click", async () => {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Error de autenticación: ", error);
-    }
-  });
-
-  // Función para cerrar sesión
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await auth.signOut();
-  });
 
   // Generar tarjetas de partidos
   partidos.sort((a, b) => b.escaños - a.escaños).forEach((partido, index) => {
@@ -63,9 +66,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     div.innerHTML = `
       <h3>${partido.nombre} (${partido.escaños} escaños)</h3>
       <div>
-        <button data-partido="${index}" data-voto="Bien" ${usuarioAutenticado ? '' : 'disabled'}>Bien</button>
-        <button data-partido="${index}" data-voto="Neutral" ${usuarioAutenticado ? '' : 'disabled'}>Neutral</button>
-        <button data-partido="${index}" data-voto="Mal" ${usuarioAutenticado ? '' : 'disabled'}>Mal</button>
+        <button data-partido="${index}" data-voto="Bien">Bien</button>
+        <button data-partido="${index}" data-voto="Neutral">Neutral</button>
+        <button data-partido="${index}" data-voto="Mal">Mal</button>
       </div>
       <p id="votos-${index}">Votos: Bien (0), Neutral (0), Mal (0)</p>
     `;
@@ -118,29 +121,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (isNaN(partidoIndex) || !voto) return;
 
-      // Si el usuario no está autenticado, mostrar pantalla emergente
+      // Si el usuario no está autenticado, mostrar un mensaje de advertencia
       if (!usuarioAutenticado) {
-        alert("Debes estar registrado para votar. Se abrirá una ventana emergente para iniciar sesión.");
-        await signInWithPopup(auth, provider); // Mostrar el popup de login
+        alert("Para que tu voto sea registrado, debes estar autenticado. ¿Te gustaría iniciar sesión?");
+        return;
       }
 
-      // Si el usuario está autenticado, continuar con el voto
-      if (usuarioAutenticado) {
-        // Eliminar el voto anterior si existe
-        if (votosRealizados[partidoIndex]) {
-          votos[partidoIndex][votosRealizados[partidoIndex]]--;
-        }
-
-        // Registrar el nuevo voto
-        votos[partidoIndex][voto]++;
-        votosRealizados[partidoIndex] = voto;
-
-        // Actualizar Firestore
-        const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
-        await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
-
-        actualizarVotos();
+      // Eliminar el voto anterior si existe
+      if (votosRealizados[partidoIndex]) {
+        votos[partidoIndex][votosRealizados[partidoIndex]]--;
       }
+
+      // Registrar el nuevo voto
+      votos[partidoIndex][voto]++;
+      votosRealizados[partidoIndex] = voto;
+
+      // Actualizar Firestore
+      const partidoDoc = doc(db, "partidos", partidos[partidoIndex].nombre);
+      await updateDoc(partidoDoc, { votos: votos[partidoIndex] });
+
+      actualizarVotos();
     }
   });
 });
