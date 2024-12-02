@@ -122,7 +122,8 @@ h2 {
   margin-top: 0.5rem;
 }
 
-.publicacion .acciones button {
+.publicacion .acciones .like,
+.publicacion .acciones .dislike {
   padding: 0.3rem 0.8rem;
   border: none;
   border-radius: 5px;
@@ -131,13 +132,19 @@ h2 {
 
 .publicacion .acciones .like {
   background-color: #28a745;
-  color: #fff;
+  color: white;
 }
 
 .publicacion .acciones .dislike {
   background-color: #dc3545;
-  color: #fff;
+  color: white;
 }
+
+.publicacion .acciones .like:hover,
+.publicacion .acciones .dislike:hover {
+  opacity: 0.8;
+}
+
 
 /* Partidos */
 #partidos {

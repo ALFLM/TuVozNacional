@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // API Key y URL para obtener noticias de economía
   const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
-  
+
   // URL de la API con un término de búsqueda relacionado con economía
   const API_URL = `https://content.guardianapis.com/search?q=economía&api-key=${API_KEY}`;
 
@@ -61,13 +61,19 @@ document.addEventListener("DOMContentLoaded", () => {
   formPublicaciones.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const texto = formPublicaciones.querySelector("textarea").value;
-    if (!texto.trim()) return;
+    const usuario = formPublicaciones.querySelector("#usuario").value.trim();
+    const texto = formPublicaciones.querySelector("#contenido").value.trim();
+
+    if (!usuario || !texto) {
+      alert("Por favor, completa todos los campos antes de publicar.");
+      return;
+    }
 
     const publicacion = document.createElement("div");
     publicacion.classList.add("publicacion");
 
     publicacion.innerHTML = `
+      <strong>${usuario}</strong>
       <p>${texto}</p>
       <div class="acciones">
         <button class="like">👍 0</button>

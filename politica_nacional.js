@@ -1,15 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // API Key y URL para obtener noticias de política en España
-  const API_KEY = "PJ-hY4UPPKZSQbHi3HG7TzrruKLv-Z8fUix0dnXUbGbO-6Jg";
-  const API_URL = `https://api.currentsapi.services/v1/search?keywords=españa&language=es&apiKey=${API_KEY}`;
+  // API Key y URL para obtener noticias de política
+  const API_KEY = "bfb01d6d-5084-4278-b417-ac240072f5f4";
+  const API_URL = `https://content.guardianapis.com/search?q=política&api-key=${API_KEY}`;
 
   const listaNoticias = document.getElementById("lista-noticias");
-  const mensajeCargando = document.getElementById("cargando-noticias");
 
   // Mostrar mensaje mientras se cargan las noticias
   listaNoticias.innerHTML = "<li>Esperando mientras cargamos todas las noticias...</li>";
 
-  // Obtener noticias de la API de Currents
+  // Obtener noticias de la API de The Guardian
   fetch(API_URL)
     .then((response) => {
       if (!response.ok) {
@@ -18,31 +17,27 @@ document.addEventListener("DOMContentLoaded", () => {
       return response.json();
     })
     .then((data) => {
-      // Verificamos si hay noticias en la respuesta
-      const noticias = data.news ? data.news.slice(0, 5) : []; // Extraemos las primeras 5 noticias, si hay alguna
+      const noticias = data.response?.results || [];
 
       if (noticias.length === 0) {
         listaNoticias.innerHTML = "<li>No hay noticias disponibles en este momento.</li>";
         return;
       }
 
-      // Ocultamos el mensaje de "cargando"
-      mensajeCargando.style.display = "none";
+      listaNoticias.innerHTML = "";
 
-      noticias.forEach((noticia) => {
+      noticias.slice(0, 5).forEach((noticia) => {
         const noticiaElement = document.createElement("div");
         noticiaElement.classList.add("noticia");
 
-        const fuente = noticia.author ? noticia.author : "Fuente no disponible";
-        const fecha = noticia.published
-          ? new Date(noticia.published).toLocaleDateString()
+        const fecha = noticia.webPublicationDate
+          ? new Date(noticia.webPublicationDate).toLocaleDateString()
           : "Fecha no disponible";
 
         noticiaElement.innerHTML = `
-          <h3>${noticia.title}</h3>
-          <p class="fuente">Fuente: ${fuente}</p>
-          <p class="fecha">${fecha}</p>
-          <a href="${noticia.url}" class="leer-mas" target="_blank">Leer más</a>
+          <h3>${noticia.webTitle}</h3>
+          <p class="fecha">Publicado: ${fecha}</p>
+          <a href="${noticia.webUrl}" class="leer-mas" target="_blank">Leer más</a>
         `;
 
         listaNoticias.appendChild(noticiaElement);
@@ -60,13 +55,19 @@ document.addEventListener("DOMContentLoaded", () => {
   formPublicaciones.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const texto = formPublicaciones.querySelector("textarea").value;
-    if (!texto.trim()) return;
+    const usuario = formPublicaciones.querySelector("#usuario").value.trim();
+    const texto = formPublicaciones.querySelector("#contenido").value.trim();
+
+    if (!usuario || !texto) {
+      alert("Por favor, completa todos los campos antes de publicar.");
+      return;
+    }
 
     const publicacion = document.createElement("div");
     publicacion.classList.add("publicacion");
 
     publicacion.innerHTML = `
+      <strong>${usuario}</strong>
       <p>${texto}</p>
       <div class="acciones">
         <button class="like">👍 0</button>

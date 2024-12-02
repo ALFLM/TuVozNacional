@@ -5,61 +5,43 @@
   box-sizing: border-box;
 }
 
-/* Estilos generales del cuerpo */
+/* Estilos generales */
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f4f4f9;
+  background-color: #f9f9f9;
   color: #333;
   line-height: 1.6;
   padding: 20px;
+  text-align: center;
 }
 
-/* Estilos del encabezado */
+/* Encabezado */
 header {
   background-color: #005a87;
   color: white;
-  padding: 20px;
-  text-align: center;
-  border-radius: 8px;
+  padding: 2rem;
 }
 
 header h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
 }
 
 header p {
-  font-size: 1.2em;
-  margin-bottom: 20px;
+  font-size: 1.2rem;
 }
 
-/* Estilo para la navegación de enlaces */
-nav.navegacion-enlaces {
-  display: inline-block;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-nav.navegacion-enlaces a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-nav.navegacion-enlaces a:hover {
-  text-decoration: underline;
-}
-
-/* Estilos del contenido principal */
+/* Contenido principal */
 main {
-  margin-top: 30px;
+  padding: 2rem;
 }
 
-/* Estilos para la lista de noticias */
-#noticias {
-  margin-bottom: 2rem;
+h2 {
+  color: #005a87;
+  margin-bottom: 1rem;
 }
 
+/* Noticias */
 .noticias-lista {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -72,6 +54,7 @@ main {
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
+  text-align: left;
   transition: transform 0.3s ease;
 }
 
@@ -100,7 +83,7 @@ main {
 .noticia .leer-mas {
   display: inline-block;
   margin-top: 1rem;
-  color: #005a87;
+  color: white;
   text-decoration: none;
   font-weight: bold;
 }
@@ -109,103 +92,89 @@ main {
   text-decoration: underline;
 }
 
-
-/* Estilo de publicaciones */
+/* Publicaciones */
 #publicaciones {
+  margin-top: 2rem;
+  padding: 2rem;
   background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 #publicaciones h2 {
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-
-#form-publicaciones {
-  display: flex;
-  flex-direction: column;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #005a87;
 }
 
 #form-publicaciones textarea {
   width: 100%;
   height: 100px;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #form-publicaciones button {
-  align-self: flex-start;
-  padding: 10px 20px;
   background-color: #005a87;
   color: white;
-  font-size: 1em;
+  padding: 0.5rem 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #form-publicaciones button:hover {
   background-color: #00466b;
 }
 
-/* Estilo de las publicaciones dinámicas */
 #lista-publicaciones .publicacion {
-  background-color: #f9f9f9;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin: 1rem 0;
+  padding: 1rem;
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#lista-publicaciones .publicacion .acciones {
+.publicacion .acciones {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
+  margin-top: 0.5rem;
 }
 
-#lista-publicaciones .publicacion .like,
-#lista-publicaciones .publicacion .dislike {
-  padding: 5px 10px;
+.publicacion .acciones .like,
+.publicacion .acciones .dislike {
+  padding: 0.3rem 0.8rem;
   border: none;
-  background-color: #ccc;
   border-radius: 5px;
   cursor: pointer;
 }
 
-#lista-publicaciones .publicacion .like:hover,
-#lista-publicaciones .publicacion .dislike:hover {
-  background-color: #005a87;
+.publicacion .acciones .like {
+  background-color: #28a745;
   color: white;
 }
 
-/* Estilo para los botones de "participa más" */
-#acceso {
-  text-align: center;
-  margin-top: 30px;
-}
-
-#acceso .boton {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #005a87;
+.publicacion .acciones .dislike {
+  background-color: #dc3545;
   color: white;
-  font-size: 1.2em;
-  text-decoration: none;
-  border-radius: 8px;
 }
 
-#acceso .boton:hover {
-  background-color: #00466b;
+.publicacion .acciones .like:hover,
+.publicacion .acciones .dislike:hover {
+  opacity: 0.8;
 }
 
-/* Estilo del pie de página */
+/* Pie de página */
 footer {
   text-align: center;
-  margin-top: 50px;
-  padding: 20px;
+  margin-top: 2rem;
+  padding: 1rem;
   background-color: #333;
   color: white;
   border-radius: 8px;
