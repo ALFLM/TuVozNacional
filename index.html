@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio - TuVoz Política</title>
   <link rel="stylesheet" href="styleindex.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header class="main-header">
@@ -18,25 +19,25 @@
     </div>
   </header>
 
-  <nav class="main-nav">
+  <nav class="main-nav" aria-label="Menú principal">
     <ul class="nav-links">
-      <li><a href="#secciones">Secciones</a></li>
-      <li><a href="#contacto">Contacto</a></li>
-      <li><a href="#registro">Registro</a></li>
-      <li><a href="#apoyar">Apoya el Proyecto</a></li>
+      <!-- Menú desplegable para Secciones -->
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Secciones</a>
+        <ul class="dropdown-menu">
+          <li><a href="politica_index.html">Política</a></li>
+          <li><a href="economia_index.html">Economía</a></li>
+        </ul>
+      </li>
+      <!-- Otros enlaces directos -->
+      <li><a href="feedback.html">Contacto</a></li>
+      <li><a href="register.html">Registro</a></li>
+      <li><a href="feedback.html">Apoya el Proyecto</a></li>
     </ul>
   </nav>
+  
 
   <main>
-    <section id="introduccion" class="intro-section">
-      <div class="container">
-        <h2>¡Bienvenido a TuVoz!</h2>
-        <p>En TuVoz, puedes ser parte activa del debate sobre los temas más importantes de España. 
-          Únete a la conversación sobre <strong>política</strong> y <strong>economía</strong> de una manera sencilla y accesible.
-        </p>
-        <p>Explora nuestras secciones y empieza a compartir tu opinión sobre lo que está pasando en el país.</p>
-      </div>
-    </section>
 
     <section id="secciones" class="sections">
       <div class="container">
@@ -44,34 +45,36 @@
         <div class="cards">
           <div class="card">
             <a href="politica_index.html" class="card-link">
-              <img src="images/martillo.jpg" alt="Política" class="card-img">
+              <img src="images/martillo.jpg" alt="Sección Política, con una imagen de martillo" class="card-img">
               <h3 class="card-title">Política</h3>
             </a>
           </div>
           <div class="card">
             <a href="economia_index.html" class="card-link">
-              <img src="images/brujula.jpg" alt="Economía" class="card-img">
+              <img src="images/brujula.jpg" alt="Sección Economía, con una imagen de brújula" class="card-img">
               <h3 class="card-title">Economía</h3>
             </a>
           </div>
         </div>
       </div>
     </section>
+    
 
     <section id="contacto" class="contact-section">
       <div class="container">
         <h2>Contáctanos</h2>
         <p>¿Tienes preguntas o sugerencias? Escríbenos y estaremos encantados de escucharte.</p>
-        <a href="feedback.html" class="btn">Ir a Contacto</a> <!-- Cambié 'contacto.html' a 'feedback.html' -->
+        <a href="feedback.html" class="btn" role="button" aria-label="Ir a la página de contacto">Ir a Contacto</a>
       </div>
     </section>
     
-
     <section id="registro" class="register-section">
       <div class="container">
         <h2>Regístrate</h2>
         <p>Únete a nuestra comunidad y empieza a participar activamente.</p>
-        <a href="register.html" class="btn">Registrarse</a>
+        <a href="register.html" class="btn" role="button" aria-label="Registrarse en la plataforma">
+          <img src="images/icon-register.png" alt="" aria-hidden="true"> Registrarse
+        </a>
       </div>
     </section>
 
@@ -79,7 +82,7 @@
       <div class="container">
         <h2>Apoya nuestro proyecto</h2>
         <p>Tu ayuda nos permite seguir desarrollando herramientas para fomentar la participación ciudadana.</p>
-        <a href="feedback.html" class="btn">Descubre cómo apoyar</a>
+        <a href="feedback.html" class="btn" role="button" aria-label="Descubre cómo apoyar">Descubre cómo apoyar</a>
       </div>
     </section>
   </main>
@@ -88,13 +91,12 @@
     <div class="container">
       <p>TuVoz Política en España &copy; 2024</p>
       <ul class="social-links">
-        <li><a href="#"><img src="images/facebook-icon.png" alt="Facebook"></a></li>
-        <li><a href="#"><img src="images/twitter-icon.png" alt="Twitter"></a></li>
-        <li><a href="#"><img src="images/instagram-icon.png" alt="Instagram"></a></li>
+        <li><a href="#"><img src="images/facebook-icon.png" alt="Página de Facebook"></a></li>
+        <li><a href="#"><img src="images/twitter-icon.png" alt="Página de Twitter"></a></li>
+        <li><a href="#"><img src="images/instagram-icon.png" alt="Página de Instagram"></a></li>
       </ul>
     </div>
   </footer>
 
-  <script src="scriptindex.js"></script>
 </body>
 </html>

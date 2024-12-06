@@ -1,10 +1,11 @@
 /* General styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', Arial, sans-serif;
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  color: #333;
+  color: #111;
+  scroll-behavior: smooth;
 }
 
 .container {
@@ -14,7 +15,7 @@ body {
 }
 
 header.main-header {
-  background: #005a87;
+  background: #0074D9;
   color: #fff;
   padding: 20px 0;
   text-align: center;
@@ -32,6 +33,7 @@ nav.main-nav ul {
 }
 
 nav.main-nav ul li {
+  position: relative; /* Necesario para el menú desplegable */
   margin: 0 10px;
 }
 
@@ -39,51 +41,104 @@ nav.main-nav ul li a {
   color: #fff;
   text-decoration: none;
   padding: 10px 15px;
-}
-
-nav.main-nav ul li a:hover {
-  background: #005a87;
+  display: block;
   border-radius: 5px;
 }
 
+nav.main-nav ul li a:hover,
+nav.main-nav ul li a.active {
+  background: #005a87;
+  font-weight: bold;
+}
+
+/* Estilo del menú desplegable */
+nav.main-nav ul li .dropdown-menu {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #444;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+nav.main-nav ul li .dropdown-menu li {
+  margin: 0;
+}
+
+nav.main-nav ul li .dropdown-menu a {
+  padding: 10px 15px;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+
+nav.main-nav ul li .dropdown-menu a:hover {
+  background: #555;
+}
+
+/* Mostrar el menú desplegable al pasar el cursor */
+nav.main-nav ul li:hover .dropdown-menu {
+  display: block;
+}
+
+/* Secciones */
 .sections .cards {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 15px; /* Espaciado entre tarjetas */
+  gap: 15px;
 }
 
+/* Estilo de las tarjetas de las secciones */
 .card {
+  position: relative;
   background: #f4f4f4;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 45%; /* Establecer un ancho base */
+  border-radius: 10px;
+  overflow: hidden;
+  width: 45%;
   margin: 15px 0;
   text-align: center;
-  overflow: hidden;
-  transition: transform 0.3s ease; /* Efecto de hover para tarjetas */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card img {
   width: 100%;
   height: auto;
-  object-fit: cover; /* Asegura que la imagen cubra el contenedor */
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
 .card-title {
-  padding: 15px;
-  background: #005a87;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
+  padding: 10px 0;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .card:hover {
-  transform: translateY(-5px); /* Efecto de hover para las tarjetas */
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover img {
+  transform: scale(1.1);
 }
 
 .btn {
   display: inline-block;
   padding: 10px 20px;
-  background: #005a87;
+  background: #FF851B;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -91,11 +146,11 @@ nav.main-nav ul li a:hover {
 }
 
 .btn:hover {
-  background: #003f61; /* Color más oscuro en hover */
+  background: #FF4500;
 }
 
 footer.main-footer {
-  background: #333;
+  background: #111;
   color: #fff;
   padding: 20px 0;
   text-align: center;
@@ -118,40 +173,18 @@ footer .social-links img {
   height: 25px;
 }
 
-/* Media Queries para mejorar la visualización en dispositivos móviles */
+/* Media Queries */
 @media (max-width: 768px) {
-  /* En pantallas pequeñas, las tarjetas deben ocupar más espacio */
   .card {
-    width: 100%; /* Las tarjetas ocupan todo el ancho */
-    margin: 10px 0;
+    width: 100%;
   }
 
-  /* El contenedor de navegación se vuelve vertical en pantallas pequeñas */
   nav.main-nav ul {
     flex-direction: column;
   }
 
-  nav.main-nav ul li {
-    margin: 5px 0;
-  }
-
-  /* Reducción de tamaño de las imágenes para que se ajusten bien en móviles */
-  .card img {
-    width: 100%;
-    height: auto;
-  }
-
-  /* Mejorar la apariencia del footer en móviles */
-  footer.main-footer {
-    padding: 15px 0;
-  }
-
   footer .social-links {
     flex-direction: column;
-  }
-
-  footer .social-links li {
-    margin: 5px 0;
   }
 }
 
