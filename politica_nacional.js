@@ -118,8 +118,8 @@ document.addEventListener("DOMContentLoaded", async () => {
      publicacion.innerHTML = `
        <p><strong>${usuario}</strong>: ${texto}</p>
        <div class="acciones">
-         <button class="like">👍 ${likes}</button>
-         <button class="dislike">👎 ${dislikes}</button>
+         <button class="like">❤️ ${likes}</button>
+         <button class="dislike">💔 ${dislikes}</button>
        </div>
        <div class="respuestas">
          <h4>Respuestas:</h4>
@@ -174,8 +174,8 @@ document.addEventListener("DOMContentLoaded", async () => {
        }
  
        await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
-       likeButton.textContent = `👍 ${likes}`;
-       dislikeButton.textContent = `👎 ${dislikes}`;
+       likeButton.textContent = `❤️ ${likes}`;
+       dislikeButton.textContent = `💔 ${dislikes}`;
      });
  
      dislikeButton.addEventListener("click", async () => {
@@ -190,8 +190,8 @@ document.addEventListener("DOMContentLoaded", async () => {
        }
  
        await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
-       likeButton.textContent = `👍 ${likes}`;
-       dislikeButton.textContent = `👎 ${dislikes}`;
+       likeButton.textContent = `❤️ ${likes}`;
+       dislikeButton.textContent = `💔 ${dislikes}`;
      });
  
      listaPublicaciones.appendChild(publicacion);
