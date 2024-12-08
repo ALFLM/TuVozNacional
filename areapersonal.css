@@ -1,0 +1,116 @@
+/* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+header {
+  background-color: #005a87;
+  color: #fff;
+  padding: 2rem;
+}
+
+header h1 {
+  margin: 0;
+}
+
+main {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+h2 {
+  color: #005a87;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Estilos para formularios */
+form {
+  background-color: #fff;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+form input, form textarea, form button {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form textarea {
+  resize: none;
+  height: 120px;
+}
+
+form button {
+  background-color: #005a87;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #004870;
+}
+
+/* Listas */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  background-color: #fff;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos específicos para secciones */
+#perfil, #mundo-ideal, #acciones, #reflexiones {
+  margin-bottom: 2rem;
+}
+
+/* Navegación */
+nav.navegacion-enlaces a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav.navegacion-enlaces a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  background-color: #ddd;
+  padding: 1rem;
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+}

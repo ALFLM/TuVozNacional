@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área Personal</title>
+  <link rel="stylesheet" href="areapersonal.css">
+</head>
+<body>
+  <header>
+    <h1>Área Personal</h1>
+    <nav class="navegacion-enlaces">
+      <a href="index.html" class="volver">← Volver a Inicio</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="perfil">
+      <h2>Perfil</h2>
+      <form id="form-perfil">
+        <label for="nombre">Nombre de usuario:</label>
+        <input type="text" id="nombre" placeholder="Tu nombre" required>
+        
+        <label for="foto">Foto de perfil:</label>
+        <input type="file" id="foto" accept="image/*">
+
+        <label for="intereses">Intereses:</label>
+        <input type="text" id="intereses" placeholder="Ej: Ecología, tecnología, igualdad...">
+
+        <label for="habilidades">Habilidades:</label>
+        <input type="text" id="habilidades" placeholder="Ej: Programación, diseño, mentoría...">
+
+        <button type="submit">Guardar Perfil</button>
+      </form>
+    </section>
+
+    <section id="mundo-ideal">
+      <h2>Mi Mundo Ideal</h2>
+      <form id="form-mundo-ideal">
+        <label for="vision">¿Cómo sería tu mundo ideal?</label>
+        <textarea id="vision" placeholder="Describe tu mundo ideal..." required></textarea>
+
+        <label for="cambios">¿Qué iniciativas y cambios harían falta para lograrlo?</label>
+        <textarea id="cambios" placeholder="Escribe tus propuestas..." required></textarea>
+
+        <button type="submit">Guardar Respuestas</button>
+      </form>
+    </section>
+
+    <section id="acciones">
+      <h2>Mis Acciones Ciudadanas</h2>
+      <form id="form-acciones">
+        <label for="accion">Acción:</label>
+        <input type="text" id="accion" placeholder="Ej: Reciclo regularmente, participo en voluntariados..." required>
+        <button type="submit">Añadir Acción</button>
+      </form>
+      <ul id="lista-acciones">
+        <!-- Acciones añadidas aparecerán aquí -->
+      </ul>
+    </section>
+
+    <section id="reflexiones">
+      <h2>Mis Reflexiones</h2>
+      <form id="form-reflexiones">
+        <textarea id="reflexion" placeholder="Escribe una reflexión personal..." required></textarea>
+        <button type="submit">Añadir Reflexión</button>
+      </form>
+      <ul id="lista-reflexiones">
+        <!-- Reflexiones añadidas aparecerán aquí -->
+      </ul>
+    </section>
+
+    <footer>
+      <p>TuVoz &copy; 2024</p>
+    </footer>
+  </main>
+
+  <script type="module" src="areapersonal.js"></script>
+</body>
+</html>
