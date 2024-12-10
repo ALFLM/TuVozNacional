@@ -82,34 +82,42 @@ window.addEventListener("load", () => {
   });
 });
 
-// Función para cargar el ranking de las publicaciones mejor valoradas en general
+// Función para cargar el ranking de las publicaciones mejor valoradas
 async function loadTopPublications() {
   const rankingList = document.getElementById("ranking-list");
   rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
 
   try {
-
-    const q = query(
-      collection(db, "publicaciones"),
-      orderBy("valoraciones", "desc"),
-      limit(3)
-    );
-
-    const querySnapshot = await getDocs(q);
+    const publicacionesRef = collection(db, "publicaciones");
+    const querySnapshot = await getDocs(publicacionesRef);
 
     if (querySnapshot.empty) {
-      rankingList.innerHTML = "<li>No hay publicaciones destacadas hoy.</li>";
+      rankingList.innerHTML = "<li>No hay publicaciones destacadas aún.</li>";
       return;
     }
 
-    rankingList.innerHTML = ""; // Limpia el contenido antes de añadir nuevos datos
-
+    // Procesar las publicaciones para calcular el puntaje
+    const publicaciones = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+      const puntaje = (data.likes || 0) - (data.dislikes || 0);
+      publicaciones.push({ ...data, puntaje });
+    });
+
+    // Ordenar publicaciones por puntaje descendente
+    publicaciones.sort((a, b) => b.puntaje - a.puntaje);
+
+    // Tomar las tres mejores publicaciones
+    const topPublicaciones = publicaciones.slice(0, 3);
+
+    rankingList.innerHTML = ""; // Limpia la lista antes de agregar los elementos
+
+    topPublicaciones.forEach((pub) => {
       const listItem = document.createElement("li");
       listItem.innerHTML = `
-        <span>${data.titulo}</span>
-        <span>${data.valoraciones} votos</span>
+        <span>${pub.usuario || "Usuario desconocido"}:</span>
+        <span>${pub.texto || "Sin texto"}</span>
+        <span>Puntaje: ${pub.puntaje}</span>
       `;
       rankingList.appendChild(listItem);
     });
@@ -123,6 +131,7 @@ async function loadTopPublications() {
 document.addEventListener("DOMContentLoaded", () => {
   loadTopPublications();
 });
+
 
 // Mensaje de bienvenida en la consola
 console.log("Bienvenido a TuVoz. ¡Explora, opina y participa!");
