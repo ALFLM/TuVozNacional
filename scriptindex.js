@@ -88,37 +88,24 @@ async function loadTopPublications() {
   rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
 
   try {
-    // Query optimizado para obtener las mejores publicaciones desde Firestore
-    console.log("Obteniendo publicaciones de Firestore...");
     const q = query(publicacionesRef, orderBy("likes", "desc"), limit(3));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      console.warn("No se encontraron publicaciones en la base de datos.");
       rankingList.innerHTML = "<li>No hay publicaciones destacadas aún.</li>";
       return;
     }
 
-    // Procesar las publicaciones para calcular el puntaje
-    const publicaciones = [];
+    rankingList.innerHTML = ""; // Limpiar lista previa
+
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       const puntaje = (data.likes || 0) - (data.dislikes || 0);
-      publicaciones.push({ ...data, puntaje });
-    });
-
-    // Ordenar publicaciones por puntaje descendente
-    publicaciones.sort((a, b) => b.puntaje - a.puntaje);
-
-    // Tomar las tres mejores publicaciones
-    rankingList.innerHTML = ""; // Limpia la lista antes de agregar los elementos
-
-    publicaciones.forEach((pub) => {
       const listItem = document.createElement("li");
       listItem.innerHTML = `
-        <span>${pub.usuario || "Usuario desconocido"}:</span>
-        <span>${pub.texto || "Sin texto"}</span>
-        <span>Puntaje: ${pub.puntaje}</span>
+        <span><strong>${data.usuario || "Anónimo"}:</strong></span> 
+        <span>${data.texto || "Sin contenido"}</span> 
+        <span><strong>Puntaje:</strong> ${puntaje}</span>
       `;
       rankingList.appendChild(listItem);
     });
