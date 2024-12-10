@@ -3,13 +3,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebas
 import { 
   getFirestore, 
   collection, 
-  addDoc, 
   getDocs, 
   query, 
-  where, 
   orderBy, 
-  limit, 
-  Timestamp 
+  limit 
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 
 // Configuración de Firebase
@@ -26,6 +23,9 @@ const firebaseConfig = {
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// Definir la referencia a la colección 'publicaciones'
+const publicacionesRef = collection(db, "publicaciones");
 
 // Resaltar la sección activa en el menú al hacer scroll
 document.addEventListener("scroll", () => {
@@ -88,11 +88,13 @@ async function loadTopPublications() {
   rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
 
   try {
-// Query optimizado para obtener las mejores publicaciones desde Firestore
-const q = query(publicacionesRef, orderBy("likes", "desc"), limit(3));
-const querySnapshot = await getDocs(q);
+    // Query optimizado para obtener las mejores publicaciones desde Firestore
+    console.log("Obteniendo publicaciones de Firestore...");
+    const q = query(publicacionesRef, orderBy("likes", "desc"), limit(3));
+    const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
+      console.warn("No se encontraron publicaciones en la base de datos.");
       rankingList.innerHTML = "<li>No hay publicaciones destacadas aún.</li>";
       return;
     }
@@ -109,11 +111,9 @@ const querySnapshot = await getDocs(q);
     publicaciones.sort((a, b) => b.puntaje - a.puntaje);
 
     // Tomar las tres mejores publicaciones
-    const topPublicaciones = publicaciones.slice(0, 3);
-
     rankingList.innerHTML = ""; // Limpia la lista antes de agregar los elementos
 
-    topPublicaciones.forEach((pub) => {
+    publicaciones.forEach((pub) => {
       const listItem = document.createElement("li");
       listItem.innerHTML = `
         <span>${pub.usuario || "Usuario desconocido"}:</span>
@@ -132,7 +132,6 @@ const querySnapshot = await getDocs(q);
 document.addEventListener("DOMContentLoaded", () => {
   loadTopPublications();
 });
-
 
 // Mensaje de bienvenida en la consola
 console.log("Bienvenido a TuVoz. ¡Explora, opina y participa!");
