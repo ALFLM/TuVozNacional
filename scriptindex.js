@@ -1,8 +1,18 @@
 // Importar las funciones necesarias de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs, 
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  Timestamp 
+} from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 
-// Configuración de Firebase (usa la que copiaste desde la consola de Firebase)
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
   authDomain: "tuvoz-dae95.firebaseapp.com",
@@ -16,7 +26,6 @@ const firebaseConfig = {
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 
 // Resaltar la sección activa en el menú al hacer scroll
 document.addEventListener("scroll", () => {
@@ -71,6 +80,52 @@ window.addEventListener("load", () => {
     }, delay);
     delay += 100; // Aumenta el retraso para cada elemento
   });
+});
+
+// Función para cargar el ranking de las publicaciones mejor valoradas
+async function loadTopPublications() {
+  const rankingList = document.getElementById("ranking-list");
+  rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
+
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const q = query(
+      collection(db, "publicaciones"),
+      where("fecha", ">=", Timestamp.fromDate(today)),
+      orderBy("fecha", "desc"),
+      orderBy("valoraciones", "desc"),
+      limit(3)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      rankingList.innerHTML = "<li>No hay publicaciones destacadas hoy.</li>";
+      return;
+    }
+
+    rankingList.innerHTML = ""; // Limpia el contenido antes de añadir nuevos datos
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const listItem = document.createElement("li");
+      listItem.innerHTML = `
+        <span>${data.titulo}</span>
+        <span>${data.valoraciones} votos</span>
+      `;
+      rankingList.appendChild(listItem);
+    });
+  } catch (error) {
+    console.error("Error al cargar las publicaciones:", error);
+    rankingList.innerHTML = "<li>Error al cargar las publicaciones.</li>";
+  }
+}
+
+// Cargar publicaciones cuando se cargue la página
+document.addEventListener("DOMContentLoaded", () => {
+  loadTopPublications();
 });
 
 // Mensaje de bienvenida en la consola

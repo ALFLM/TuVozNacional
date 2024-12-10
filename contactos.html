@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contactos</title>
+  <link rel="stylesheet" href="contactos.css">
+</head>
+<body>
+  <header>
+    <h1>Contactos</h1>
+    <nav class="navegacion-enlaces">
+      <a href="index.html" class="volver">← Volver a Inicio</a>
+    </nav>
+    <nav class="navegacion-enlaces">
+        <a href="areapersonal.html" class="volver">← Volver a tu Área Personal</a>
+    </nav>
+  </header>
+  
+  <main>
+    <!-- Barra de búsqueda -->
+    <section id="buscar-usuarios">
+      <input type="text" id="buscar-input" placeholder="Buscar usuarios por nombre o intereses">
+      <button id="buscar-btn">Buscar</button>
+    </section>
+    
+    <!-- Resultados de la búsqueda -->
+    <section id="resultados">
+      <h2>Resultados de la búsqueda</h2>
+      <ul id="lista-usuarios"></ul>
+    </section>
+    
+    <!-- Perfil y publicaciones -->
+    <section id="perfil-usuario">
+      <h2>Perfil del usuario</h2>
+      <div id="info-perfil">
+        <img id="foto-perfil" src="" alt="Foto del usuario" />
+        <p><strong>Nombre:</strong> <span id="nombre-perfil"></span></p>
+        <p><strong>Intereses:</strong> <span id="intereses-perfil"></span></p>
+      </div>
+      <h3>Publicaciones</h3>
+      <ul id="lista-publicaciones"></ul>
+    </section>
+  </main>
+  
+  <script src="contactos.js" type="module"></script>
+</body>
+</html>

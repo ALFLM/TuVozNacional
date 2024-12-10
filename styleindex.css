@@ -21,6 +21,25 @@ header.main-header {
   text-align: center;
 }
 
+.header-links {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.header-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.header-links a:hover {
+  color: #023e8a;
+}
+
 nav.main-nav {
   background: #333;
 }
@@ -134,6 +153,41 @@ nav.main-nav ul li:hover .dropdown-menu {
 .card:hover img {
   transform: scale(1.1);
 }
+
+/* estilo ranking*/
+.ranking-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+}
+
+.ranking-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.ranking-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ranking-list li {
+  background: #fff;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ranking-list li span {
+  font-weight: bold;
+}
+
 
 .btn {
   display: inline-block;
