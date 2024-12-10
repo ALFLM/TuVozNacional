@@ -88,8 +88,9 @@ async function loadTopPublications() {
   rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
 
   try {
-    const publicacionesRef = collection(db, "publicaciones");
-    const querySnapshot = await getDocs(publicacionesRef);
+// Query optimizado para obtener las mejores publicaciones desde Firestore
+const q = query(publicacionesRef, orderBy("likes", "desc"), limit(3));
+const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
       rankingList.innerHTML = "<li>No hay publicaciones destacadas aún.</li>";
