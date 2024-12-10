@@ -1,54 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio - TuVoz Política</title>
-  <link rel="stylesheet" href="styleindex.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <script defer src="scriptindex.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - TuVoz Política</title>
+    <link rel="stylesheet" href="styleindex.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script defer src="scriptindex.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
+  </head>
 <body>
   <header class="main-header">
     <div class="container">
       <h1>TuVoz</h1>
       <p>Explora, opina y evalúa.</p>
     </div>
-    <nav class="header-links">
+    
+    <!-- Contenedor para los enlaces superiores -->
+    <div class="header-links">
       <a href="contactos.html">Contactos</a>
       <a href="register.html">Registro</a>
-    </nav>
+    </div>
   </header>
 
   <nav class="main-nav" aria-label="Menú principal">
     <ul class="nav-links">
+      <!-- Menú desplegable para Secciones -->
       <li class="dropdown">
-        <a href="#" class="dropdown-toggle">Secciones</a>
+        <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Secciones</a>
         <ul class="dropdown-menu">
           <li><a href="politica_index.html">Política</a></li>
           <li><a href="economia_index.html">Economía</a></li>
         </ul>
       </li>
+      <!-- Otros enlaces directos -->
       <li><a href="areapersonal.html">Área Personal</a></li>
       <li><a href="feedback.html">Apoya el Proyecto</a></li>
     </ul>
   </nav>
+  
 
   <main>
+
     <section id="secciones" class="sections">
       <div class="container">
         <h2>Nuestras Secciones</h2>
         <div class="cards">
-          <a href="politica_index.html" class="card">
-            <img src="images/martillo.jpg" alt="Política" class="card-img">
-            <h3 class="card-title">Política</h3>
-          </a>
-          <a href="economia_index.html" class="card">
-            <img src="images/brujula.jpg" alt="Economía" class="card-img">
-            <h3 class="card-title">Economía</h3>
-          </a>
+          <div class="card">
+            <a href="politica_index.html" class="card-link">
+              <img src="images/martillo.jpg" alt="Sección Política, con una imagen de martillo" class="card-img">
+              <h3 class="card-title">Política</h3>
+            </a>
+          </div>
+          <div class="card">
+            <a href="economia_index.html" class="card-link">
+              <img src="images/brujula.jpg" alt="Sección Economía, con una imagen de brújula" class="card-img">
+              <h3 class="card-title">Economía</h3>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -56,20 +66,20 @@
     <section id="ranking" class="ranking-section">
       <div class="container">
         <h2>Top 3 Publicaciones del Día</h2>
-        <ul id="ranking-list">
+        <ul id="ranking-list" class="ranking-list">
           <li>Cargando publicaciones...</li>
         </ul>
       </div>
-    </section>
-    
+    </section>    
+
     <section id="contacto" class="contact-section">
       <div class="container">
         <h2>Contáctanos</h2>
         <p>¿Tienes preguntas o sugerencias? Escríbenos y estaremos encantados de escucharte.</p>
-        <a href="feedback.html" class="btn">Ir a Contacto</a>
+        <a href="feedback.html" class="btn" role="button" aria-label="Ir a la página de contacto">Ir a Contacto</a>
       </div>
     </section>
-
+    
     <section id="registro" class="register-section">
       <div class="container">
         <h2>Regístrate</h2>
@@ -91,13 +101,16 @@
 
   <footer class="main-footer">
     <div class="container">
-      <p>TuVoz Política &copy; 2024</p>
+      <p>TuVoz Política en España &copy; 2024</p>
       <ul class="social-links">
-        <li><a href="#"><img src="images/facebook-icon.png" alt="Facebook"></a></li>
-        <li><a href="#"><img src="images/twitter-icon.png" alt="Twitter"></a></li>
-        <li><a href="#"><img src="images/instagram-icon.png" alt="Instagram"></a></li>
+        <li><a href="#"><img src="images/facebook-icon.png" alt="Página de Facebook"></a></li>
+        <li><a href="#"><img src="images/twitter-icon.png" alt="Página de Twitter"></a></li>
+        <li><a href="#"><img src="images/instagram-icon.png" alt="Página de Instagram"></a></li>
       </ul>
     </div>
   </footer>
+
+  <script type="module" src="scriptindex.js"></script>
+
 </body>
 </html>
