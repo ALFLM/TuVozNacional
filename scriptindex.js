@@ -82,14 +82,12 @@ window.addEventListener("load", () => {
   });
 });
 
-// Función para cargar el ranking de las publicaciones mejor valoradas
+// Función para cargar el ranking de las publicaciones mejor valoradas en general
 async function loadTopPublications() {
   const rankingList = document.getElementById("ranking-list");
   rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
 
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
 
     const q = query(
       collection(db, "publicaciones"),
