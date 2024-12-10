@@ -93,8 +93,6 @@ async function loadTopPublications() {
 
     const q = query(
       collection(db, "publicaciones"),
-      where("fecha", ">=", Timestamp.fromDate()),
-      orderBy("fecha", "desc"),
       orderBy("valoraciones", "desc"),
       limit(3)
     );
