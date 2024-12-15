@@ -1,110 +1,152 @@
 // Importar las funciones necesarias de Firebase
 import { 
-  initializeApp 
-} from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
-import { 
-  getFirestore, 
-  collection, 
-  getDocs, 
-  addDoc, 
-  doc, 
-  getDoc, 
-  setDoc 
-} from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
-
-// Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
-  authDomain: "tuvoz-dae95.firebaseapp.com",
-  databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "tuvoz-dae95",
-  storageBucket: "tuvoz-dae95.firebasestorage.app",
-  messagingSenderId: "21285165787",
-  appId: "1:21285165787:web:d7f84940999df2935e4afe"
-};
-
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Referencias de Firestore
-const temasRef = doc(db, "debate", "tema-semanal");
-const comentariosRef = collection(db, "comentarios-debate");
-
-// Función para cargar el tema de debate semanal
-async function loadTemaDebate() {
-  const temaActual = document.getElementById("tema-actual");
-
-  try {
-    const temaSnapshot = await getDoc(temasRef);
-    if (temaSnapshot.exists()) {
-      temaActual.textContent = temaSnapshot.data().tema || "Sin tema definido.";
-    } else {
-      temaActual.textContent = "Sin tema definido.";
+    initializeApp 
+  } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+  import { 
+    getFirestore, 
+    collection, 
+    getDocs, 
+    addDoc, 
+    doc, 
+    getDoc, 
+    setDoc, 
+    updateDoc 
+  } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
+  
+  // Configuración de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCYLtf51vBg0NmXoEMD64KbNcU1Izhoc6M",
+    authDomain: "tuvoz-dae95.firebaseapp.com",
+    databaseURL: "https://tuvoz-dae95-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "tuvoz-dae95",
+    storageBucket: "tuvoz-dae95.firebasestorage.app",
+    messagingSenderId: "21285165787",
+    appId: "1:21285165787:web:d7f84940999df2935e4afe"
+  };
+  
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  
+  // Referencias de Firestore
+  const temasRef = doc(db, "debate", "tema-semanal");
+  const comentariosRef = collection(db, "comentarios-debate");
+  
+  // Función para cargar el tema de debate semanal
+  async function loadTemaDebate() {
+    const temaActual = document.getElementById("tema-actual");
+  
+    try {
+      const temaSnapshot = await getDoc(temasRef);
+      if (temaSnapshot.exists()) {
+        temaActual.textContent = temaSnapshot.data().tema || "Sin tema definido.";
+      } else {
+        temaActual.textContent = "Sin tema definido.";
+      }
+    } catch (error) {
+      console.error("Error al cargar el tema de debate:", error);
+      temaActual.textContent = "Error al cargar el tema.";
     }
-  } catch (error) {
-    console.error("Error al cargar el tema de debate:", error);
-    temaActual.textContent = "Error al cargar el tema.";
   }
-}
-
-// Función para cargar comentarios
-async function loadComentarios() {
-  const comentariosList = document.getElementById("comentarios-debate");
-  comentariosList.innerHTML = "<li>Cargando comentarios...</li>";
-
-  try {
-    const querySnapshot = await getDocs(comentariosRef);
-    comentariosList.innerHTML = ""; // Limpia la lista antes de añadir comentarios
-
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const listItem = document.createElement("li");
-      listItem.innerHTML = `
-        <strong>${data.usuario || "Anónimo"}:</strong>
-        <span>${data.texto}</span>
-        <small>${new Date(data.fecha).toLocaleString()}</small>
-      `;
-      comentariosList.appendChild(listItem);
-    });
-  } catch (error) {
-    console.error("Error al cargar los comentarios:", error);
-    comentariosList.innerHTML = "<li>Error al cargar los comentarios.</li>";
+  
+  // Función para cargar comentarios con botones de valoración
+  async function loadComentarios() {
+    const comentariosList = document.getElementById("comentarios-debate");
+    comentariosList.innerHTML = "<li>Cargando comentarios...</li>";
+  
+    try {
+      const querySnapshot = await getDocs(comentariosRef);
+      comentariosList.innerHTML = ""; // Limpia la lista antes de añadir comentarios
+  
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `
+          <strong>${data.usuario || "Anónimo"}:</strong>
+          <span>${data.texto}</span>
+          <small>${new Date(data.fecha).toLocaleString()}</small>
+          <div>
+            <button class="like-btn" data-id="${doc.id}">👍 <span>${data.likes || 0}</span></button>
+            <button class="dislike-btn" data-id="${doc.id}">👎 <span>${data.dislikes || 0}</span></button>
+          </div>
+        `;
+        comentariosList.appendChild(listItem);
+      });
+  
+      // Añadir eventos a los botones de like y dislike
+      document.querySelectorAll(".like-btn").forEach((button) => {
+        button.addEventListener("click", () => handleVote(button.dataset.id, "likes"));
+      });
+  
+      document.querySelectorAll(".dislike-btn").forEach((button) => {
+        button.addEventListener("click", () => handleVote(button.dataset.id, "dislikes"));
+      });
+    } catch (error) {
+      console.error("Error al cargar los comentarios:", error);
+      comentariosList.innerHTML = "<li>Error al cargar los comentarios.</li>";
+    }
   }
-}
-
-// Guardar un nuevo comentario
-async function saveComentario(usuario, texto) {
-  try {
-    const nuevoComentario = {
-      usuario,
-      texto,
-      fecha: new Date().toISOString(),
-    };
-    await addDoc(comentariosRef, nuevoComentario);
-    console.log("Comentario guardado correctamente.");
+  
+  // Guardar un nuevo comentario
+  async function saveComentario(usuario, texto) {
+    try {
+      const nuevoComentario = {
+        usuario: usuario || "Anónimo", // Si no se proporciona un nombre, usar "Anónimo"
+        texto,
+        fecha: new Date().toISOString(),
+        likes: 0,
+        dislikes: 0
+      };
+      await addDoc(comentariosRef, nuevoComentario);
+      console.log("Comentario guardado correctamente.");
+      loadComentarios();
+    } catch (error) {
+      console.error("Error al guardar el comentario:", error);
+    }
+  }
+  
+  // Manejo del formulario de comentarios
+  document.getElementById("form-debate").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const usuarioInput = document.getElementById("usuario");
+    const comentarioInput = document.getElementById("comentario");
+    const usuarioNombre = usuarioInput.value.trim();
+    const comentarioTexto = comentarioInput.value.trim();
+  
+    if (comentarioTexto) {
+      saveComentario(usuarioNombre, comentarioTexto);
+      comentarioInput.value = ""; // Limpiar el campo de texto
+      usuarioInput.value = ""; // Limpiar el campo del nombre
+    } else {
+      alert("El comentario no puede estar vacío.");
+    }
+  });
+  
+  // Función para manejar votos (like o dislike)
+  async function handleVote(commentId, type) {
+    try {
+      const commentRef = doc(comentariosRef, commentId);
+      const commentSnapshot = await getDoc(commentRef);
+  
+      if (commentSnapshot.exists()) {
+        const data = commentSnapshot.data();
+        const updateData = {};
+        updateData[type] = (data[type] || 0) + 1; // Incrementar el contador correspondiente
+  
+        await updateDoc(commentRef, updateData);
+        console.log(`${type} actualizado para el comentario ${commentId}.`);
+        loadComentarios(); // Recargar los comentarios para reflejar los cambios
+      } else {
+        console.error("El comentario no existe.");
+      }
+    } catch (error) {
+      console.error("Error al manejar el voto:", error);
+    }
+  }
+  
+  // Cargar tema y comentarios al iniciar
+  document.addEventListener("DOMContentLoaded", () => {
+    loadTemaDebate();
     loadComentarios();
-  } catch (error) {
-    console.error("Error al guardar el comentario:", error);
-  }
-}
-
-// Manejo del formulario de comentarios
-document.getElementById("form-debate").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const comentarioInput = document.getElementById("comentario");
-  const comentarioTexto = comentarioInput.value.trim();
-
-  if (comentarioTexto) {
-    saveComentario("Usuario Prueba", comentarioTexto); // Cambiar "Usuario Prueba" por el nombre real del usuario
-    comentarioInput.value = ""; // Limpiar el campo de texto
-  } else {
-    alert("El comentario no puede estar vacío.");
-  }
-});
-
-// Cargar tema y comentarios al iniciar
-document.addEventListener("DOMContentLoaded", () => {
-  loadTemaDebate();
-  loadComentarios();
-});
+  });
+  
