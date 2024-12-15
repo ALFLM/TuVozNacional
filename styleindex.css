@@ -118,7 +118,7 @@ nav.main-nav ul li:hover .dropdown-menu {
   background: #f4f4f4;
   border-radius: 10px;
   overflow: hidden;
-  width: 45%;
+  width: 30%;
   margin: 15px 0;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
