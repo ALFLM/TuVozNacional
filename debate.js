@@ -66,8 +66,8 @@ import {
           <span>${data.texto}</span>
           <small>${new Date(data.fecha).toLocaleString()}</small>
           <div>
-            <button class="like-btn" data-id="${doc.id}">👍 <span>${data.likes || 0}</span></button>
-            <button class="dislike-btn" data-id="${doc.id}">👎 <span>${data.dislikes || 0}</span></button>
+            <button class="like-btn" data-id="${doc.id}">❤️ <span>${data.likes || 0}</span></button>
+            <button class="dislike-btn" data-id="${doc.id}">💔 <span>${data.dislikes || 0}</span></button>
           </div>
         `;
         comentariosList.appendChild(listItem);
@@ -122,27 +122,55 @@ import {
     }
   });
   
-  // Función para manejar votos (like o dislike)
-  async function handleVote(commentId, type) {
+// Función para manejar votos (like o dislike)
+async function handleVote(commentId, type) {
+    const userId = "usuario-actual"; // Reemplazar con el ID único del usuario autenticado
+    const commentRef = doc(comentariosRef, commentId);
+    const userVoteRef = doc(collection(commentRef, "votos"), userId);
+  
     try {
-      const commentRef = doc(comentariosRef, commentId);
-      const commentSnapshot = await getDoc(commentRef);
+      // Obtener el comentario y el voto del usuario
+      const [commentSnapshot, userVoteSnapshot] = await Promise.all([
+        getDoc(commentRef),
+        getDoc(userVoteRef)
+      ]);
   
-      if (commentSnapshot.exists()) {
-        const data = commentSnapshot.data();
-        const updateData = {};
-        updateData[type] = (data[type] || 0) + 1; // Incrementar el contador correspondiente
-  
-        await updateDoc(commentRef, updateData);
-        console.log(`${type} actualizado para el comentario ${commentId}.`);
-        loadComentarios(); // Recargar los comentarios para reflejar los cambios
-      } else {
+      if (!commentSnapshot.exists()) {
         console.error("El comentario no existe.");
+        return;
       }
+  
+      const commentData = commentSnapshot.data();
+      const previousVote = userVoteSnapshot.exists() ? userVoteSnapshot.data().tipo : null;
+  
+      // Verificar si el usuario ya votó
+      if (previousVote === type) {
+        console.log("El usuario ya ha votado de esta manera.");
+        return; // No hacer nada si el usuario ya emitió el mismo voto
+      }
+  
+      const updateData = {};
+      if (previousVote) {
+        // Revertir el voto anterior
+        updateData[previousVote] = (commentData[previousVote] || 0) - 1;
+      }
+  
+      // Incrementar el nuevo tipo de voto
+      updateData[type] = (commentData[type] || 0) + 1;
+  
+      // Actualizar los datos del comentario y registrar el voto del usuario
+      await Promise.all([
+        updateDoc(commentRef, updateData),
+        setDoc(userVoteRef, { tipo: type })
+      ]);
+  
+      console.log(`Voto actualizado: ${type} para el comentario ${commentId}.`);
+      loadComentarios(); // Recargar los comentarios para reflejar los cambios
     } catch (error) {
       console.error("Error al manejar el voto:", error);
     }
   }
+  
   
   // Cargar tema y comentarios al iniciar
   document.addEventListener("DOMContentLoaded", () => {
