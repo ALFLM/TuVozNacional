@@ -36,7 +36,7 @@ document.addEventListener("scroll", () => {
 
   secciones.forEach((seccion, index) => {
     const rect = seccion.getBoundingClientRect();
-    if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+    if (rect.top >= 0 && rect.top <= window.innerHeight / 3) {
       indexActivo = index;
     }
   });
