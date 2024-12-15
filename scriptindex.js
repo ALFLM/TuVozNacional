@@ -8,6 +8,7 @@ import {
   orderBy, 
   limit 
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
+import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-analytics.js";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -17,12 +18,14 @@ const firebaseConfig = {
   projectId: "tuvoz-dae95",
   storageBucket: "tuvoz-dae95.firebasestorage.app",
   messagingSenderId: "21285165787",
-  appId: "1:21285165787:web:d7f84940999df2935e4afe"
+  appId: "1:21285165787:web:d7f84940999df2935e4afe",
+  measurementId: "G-2STQP38QYH",
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const analytics = getAnalytics(app);
 
 // Definir la referencia a la colección 'publicaciones'
 const publicacionesRef = collection(db, "publicaciones");
@@ -50,7 +53,7 @@ document.addEventListener("scroll", () => {
   });
 });
 
-// Manejo de clics en enlaces de navegación para scroll suave
+// Manejo de clics en enlaces de navegación para scroll suave y registro de eventos
 document.querySelectorAll("nav ul li a").forEach((enlace) => {
   enlace.addEventListener("click", (event) => {
     const href = enlace.getAttribute("href");
@@ -62,6 +65,13 @@ document.querySelectorAll("nav ul li a").forEach((enlace) => {
 
       if (destino) {
         destino.scrollIntoView({ behavior: "smooth" });
+
+        // Registrar el evento de navegación en Analytics
+        logEvent(analytics, "section_visited", {
+          section_name: id,
+          timestamp: new Date().toISOString(),
+        });
+        console.log(`Sección visitada: ${id}`);
       }
     }
   });
