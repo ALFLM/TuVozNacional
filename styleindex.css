@@ -52,7 +52,7 @@ nav.main-nav ul {
 }
 
 nav.main-nav ul li {
-  position: relative; /* Necesario para el menú desplegable */
+  position: relative;
   margin: 0 10px;
 }
 
@@ -72,7 +72,7 @@ nav.main-nav ul li a.active {
 
 /* Estilo del menú desplegable */
 nav.main-nav ul li .dropdown-menu {
-  display: none; /* Oculto por defecto */
+  display: none;
   position: absolute;
   top: 100%;
   left: 0;
@@ -112,6 +112,23 @@ nav.main-nav ul li:hover .dropdown-menu {
   gap: 15px;
 }
 
+figure {
+  text-align: center;
+  margin: 20px 0;
+}
+
+figcaption {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.5); /* Fondo oscuro para mejorar la visibilidad */
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
 /* Estilo de las tarjetas de las secciones */
 .card {
   position: relative;
@@ -123,13 +140,15 @@ nav.main-nav ul li:hover .dropdown-menu {
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  height: 300px; /* Fijamos una altura uniforme */
 }
 
 .card img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  filter: brightness(0.9); /* Le damos un filtro para oscurecer la imagen */
 }
 
 .card-title {
@@ -154,7 +173,7 @@ nav.main-nav ul li:hover .dropdown-menu {
   transform: scale(1.1);
 }
 
-/* estilo ranking*/
+/* estilo ranking */
 .ranking-section {
   background-color: #f9f9f9;
   padding: 20px;
@@ -187,7 +206,6 @@ nav.main-nav ul li:hover .dropdown-menu {
 .ranking-list li span {
   font-weight: bold;
 }
-
 
 .btn {
   display: inline-block;
