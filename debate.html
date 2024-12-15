@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debate Semanal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="debate.html" class="activo">Debate</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="debate">
+      <h2>Debate semanal</h2>
+      <p id="tema-actual">Cargando tema de debate...</p>
+      <ul id="comentarios-debate">
+        <!-- Los comentarios se cargarán aquí -->
+      </ul>
+      <form id="form-debate">
+        <textarea id="comentario" placeholder="Escribe tu opinión aquí..." required></textarea>
+        <button type="submit">Comentar</button>
+      </form>
+    </section>
+  </main>
+  <script type="module" src="debate.js"></script>
+</body>
+</html>
