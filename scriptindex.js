@@ -53,12 +53,16 @@ document.addEventListener("scroll", () => {
 // Manejo de clics en enlaces de navegación para scroll suave
 document.querySelectorAll("nav ul li a").forEach((enlace) => {
   enlace.addEventListener("click", (event) => {
-    event.preventDefault();
-    const id = enlace.getAttribute("href").substring(1);
-    const destino = document.getElementById(id);
+    const href = enlace.getAttribute("href");
 
-    if (destino) {
-      destino.scrollIntoView({ behavior: "smooth" });
+    if (href.startsWith("#")) {
+      event.preventDefault();
+      const id = href.substring(1);
+      const destino = document.getElementById(id);
+
+      if (destino) {
+        destino.scrollIntoView({ behavior: "smooth" });
+      }
     }
   });
 });
