@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      noticias.slice(0, 5).forEach((noticia) => {
+      noticias.slice(0, 1).forEach((noticia) => {
         const noticiaElement = document.createElement("div");
         noticiaElement.classList.add("noticia");
 
@@ -164,14 +164,14 @@ const likeButton = publicacion.querySelector(".like");
 const dislikeButton = publicacion.querySelector(".dislike");
 
 likeButton.addEventListener("click", async () => {
-  const currentUser = "user"; // Cambiar por el usuario real o autenticar correctamente
+  const currentUser = "uniqueUserId"; // Reemplaza esto con el identificador único del usuario.
 
   if (votos[currentUser] === "like") {
-    // Si el usuario ya dio like, lo elimina
+    // Si el usuario ya dio like, lo elimina.
     likes--;
     delete votos[currentUser];
   } else {
-    // Si el usuario cambia su voto de dislike a like
+    // Si el usuario cambia su voto de dislike a like.
     if (votos[currentUser] === "dislike") {
       dislikes--;
     }
@@ -179,23 +179,27 @@ likeButton.addEventListener("click", async () => {
     votos[currentUser] = "like";
   }
 
-  // Actualizar la publicación en Firebase
-  await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
+  try {
+    // Actualizar Firebase.
+    await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
 
-  // Actualizar la interfaz
-  likeButton.textContent = `❤️ ${likes}`;
-  dislikeButton.textContent = `💔 ${dislikes}`;
+    // Actualizar la interfaz.
+    likeButton.textContent = `❤️ ${likes}`;
+    dislikeButton.textContent = `💔 ${dislikes}`;
+  } catch (error) {
+    console.error("Error al actualizar el voto:", error);
+  }
 });
 
 dislikeButton.addEventListener("click", async () => {
-  const currentUser = "user"; // Cambiar por el usuario real o autenticar correctamente
+  const currentUser = "uniqueUserId"; // Reemplaza esto con el identificador único del usuario.
 
   if (votos[currentUser] === "dislike") {
-    // Si el usuario ya dio dislike, lo elimina
+    // Si el usuario ya dio dislike, lo elimina.
     dislikes--;
     delete votos[currentUser];
   } else {
-    // Si el usuario cambia su voto de like a dislike
+    // Si el usuario cambia su voto de like a dislike.
     if (votos[currentUser] === "like") {
       likes--;
     }
@@ -203,14 +207,17 @@ dislikeButton.addEventListener("click", async () => {
     votos[currentUser] = "dislike";
   }
 
-  // Actualizar la publicación en Firebase
-  await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
+  try {
+    // Actualizar Firebase.
+    await updateDoc(doc(db, "publicaciones", id), { likes, dislikes, votos });
 
-  // Actualizar la interfaz
-  likeButton.textContent = `❤️ ${likes}`;
-  dislikeButton.textContent = `💔 ${dislikes}`;
+    // Actualizar la interfaz.
+    likeButton.textContent = `❤️ ${likes}`;
+    dislikeButton.textContent = `💔 ${dislikes}`;
+  } catch (error) {
+    console.error("Error al actualizar el voto:", error);
+  }
 });
-
  
      listaPublicaciones.appendChild(publicacion);
    }
