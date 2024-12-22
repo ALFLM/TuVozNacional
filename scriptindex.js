@@ -26,15 +26,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
-
-// Definir la referencia a la colección 'publicaciones'
 const publicacionesRef = collection(db, "publicaciones");
 
-// Resaltar la sección activa en el menú al hacer scroll
-document.addEventListener("scroll", () => {
+// Función para resaltar la sección activa en el menú
+function resaltarSeccionActiva() {
   const secciones = document.querySelectorAll("section");
   const enlacesMenu = document.querySelectorAll("nav ul li a");
-
   let indexActivo = -1;
 
   secciones.forEach((seccion, index) => {
@@ -51,34 +48,33 @@ document.addEventListener("scroll", () => {
       enlace.classList.remove("activo");
     }
   });
-});
+}
 
-// Manejo de clics en enlaces de navegación para scroll suave y registro de eventos
-document.querySelectorAll("nav ul li a").forEach((enlace) => {
-  enlace.addEventListener("click", (event) => {
-    const href = enlace.getAttribute("href");
+// Función para manejar clics en enlaces de navegación
+function manejarNavegacion() {
+  document.querySelectorAll("nav ul li a").forEach((enlace) => {
+    enlace.addEventListener("click", (event) => {
+      const href = enlace.getAttribute("href");
+      if (href.startsWith("#")) {
+        event.preventDefault();
+        const id = href.substring(1);
+        const destino = document.getElementById(id);
 
-    if (href.startsWith("#")) {
-      event.preventDefault();
-      const id = href.substring(1);
-      const destino = document.getElementById(id);
-
-      if (destino) {
-        destino.scrollIntoView({ behavior: "smooth" });
-
-        // Registrar el evento de navegación en Analytics
-        logEvent(analytics, "section_visited", {
-          section_name: id,
-          timestamp: new Date().toISOString(),
-        });
-        console.log(`Sección visitada: ${id}`);
+        if (destino) {
+          destino.scrollIntoView({ behavior: "smooth" });
+          logEvent(analytics, "section_visited", {
+            section_name: id,
+            timestamp: new Date().toISOString(),
+          });
+          console.log(`Sección visitada: ${id}`);
+        }
       }
-    }
+    });
   });
-});
+}
 
-// Animaciones simples al cargar la página
-window.addEventListener("load", () => {
+// Función para aplicar animaciones al cargar la página
+function aplicarAnimaciones() {
   const elementos = document.querySelectorAll("section, header, nav");
   elementos.forEach((el) => {
     el.style.opacity = "0";
@@ -92,28 +88,24 @@ window.addEventListener("load", () => {
       el.style.opacity = "1";
       el.style.transform = "translateY(0)";
     }, delay);
-    delay += 100; // Aumenta el retraso para cada elemento
+    delay += 100;
   });
-});
+}
 
-// Función para cargar el ranking de las publicaciones mejor valoradas
+// Función para cargar el ranking de publicaciones mejor valoradas
 async function loadTopPublications() {
   const rankingList = document.getElementById("ranking-list");
   rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
 
   try {
-    // Query optimizado para obtener las mejores publicaciones desde Firestore
-    console.log("Obteniendo publicaciones de Firestore...");
     const q = query(publicacionesRef, orderBy("likes", "desc"), limit(3));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      console.warn("No se encontraron publicaciones en la base de datos.");
       rankingList.innerHTML = "<li>No hay publicaciones destacadas aún.</li>";
       return;
     }
 
-    // Procesar las publicaciones para calcular el puntaje
     const publicaciones = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
@@ -121,12 +113,9 @@ async function loadTopPublications() {
       publicaciones.push({ ...data, puntaje });
     });
 
-    // Ordenar publicaciones por puntaje descendente
     publicaciones.sort((a, b) => b.puntaje - a.puntaje);
 
-    // Tomar las tres mejores publicaciones
-    rankingList.innerHTML = ""; // Limpia la lista antes de agregar los elementos
-
+    rankingList.innerHTML = "";
     publicaciones.forEach((pub) => {
       const listItem = document.createElement("li");
       listItem.innerHTML = `
@@ -142,10 +131,16 @@ async function loadTopPublications() {
   }
 }
 
-// Cargar publicaciones cuando se cargue la página
+// Eventos iniciales al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
+  resaltarSeccionActiva();
+  manejarNavegacion();
+  aplicarAnimaciones();
   loadTopPublications();
 });
+
+// Registrar scroll para actualizar el menú activo
+document.addEventListener("scroll", resaltarSeccionActiva);
 
 // Mensaje de bienvenida en la consola
 console.log("Bienvenido a TuVoz. ¡Explora, opina y participa!");

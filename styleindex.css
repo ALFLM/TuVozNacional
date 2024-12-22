@@ -172,37 +172,68 @@ figcaption {
 
 /* estilo ranking */
 .ranking-section {
-  background-color: #f9f9f9;
-  padding: 20px;
-  margin-top: 20px;
-  border-top: 1px solid #ccc;
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
+  padding: 30px;
+  margin-top: 30px;
+  border-top: 3px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ranking-section h2 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #1a202c;
+  text-align: center;
+  font-weight: 700;
 }
 
 .ranking-list {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .ranking-list li {
-  background: #fff;
-  margin-bottom: 10px;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  background: #ffffff;
+  padding: 15px 20px;
+  border: 2px solid #edf2f7;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ranking-list li:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .ranking-list li span {
-  font-weight: bold;
+  font-weight: 500;
+  color: #2d3748;
 }
+
+.ranking-list li .ranking-badge {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #4a5568;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
 
 .btn {
   display: inline-block;
