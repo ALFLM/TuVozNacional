@@ -92,17 +92,17 @@ function aplicarAnimaciones() {
   });
 }
 
-// Función para cargar el ranking de publicaciones mejor valoradas
+// Función para cargar el ranking de las publicaciones mejor valoradas
 async function loadTopPublications() {
   const rankingList = document.getElementById("ranking-list");
-  rankingList.innerHTML = "<li>Cargando publicaciones...</li>";
+  rankingList.innerHTML = '<li class="loading-message">Cargando publicaciones...</li>';
 
   try {
     const q = query(publicacionesRef, orderBy("likes", "desc"), limit(3));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      rankingList.innerHTML = "<li>No hay publicaciones destacadas aún.</li>";
+      rankingList.innerHTML = '<li>No hay publicaciones destacadas aún.</li>';
       return;
     }
 
@@ -115,19 +115,20 @@ async function loadTopPublications() {
 
     publicaciones.sort((a, b) => b.puntaje - a.puntaje);
 
-    rankingList.innerHTML = "";
-    publicaciones.forEach((pub) => {
+    const badges = ["🥇", "🥈", "🥉"];
+    rankingList.innerHTML = ""; // Limpia la lista
+
+    publicaciones.forEach((pub, index) => {
       const listItem = document.createElement("li");
       listItem.innerHTML = `
-        <span>${pub.usuario || "Usuario desconocido"}:</span>
-        <span>${pub.texto || "Sin texto"}</span>
+        <span class="ranking-badge">${badges[index]}</span>
+        <span><strong>${pub.usuario || "Anónimo"}:</strong> ${pub.texto || "Sin texto"}</span>
         <span>Puntaje: ${pub.puntaje}</span>
       `;
       rankingList.appendChild(listItem);
     });
   } catch (error) {
-    console.error("Error al cargar las publicaciones:", error);
-    rankingList.innerHTML = "<li>Error al cargar las publicaciones.</li>";
+    rankingList.innerHTML = '<li>Error al cargar las publicaciones.</li>';
   }
 }
 
