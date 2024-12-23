@@ -18,19 +18,25 @@
   <main>
     <section id="debate">
       <h2>Debate semanal</h2>
-      <p id="tema-actual">Cargando tema de debate...</p>
-      <ul id="comentarios-debate">
-        <!-- Los comentarios se cargarán aquí -->
-      </ul>
+      <p id="tema-actual" aria-live="polite">Cargando tema de debate...</p>
       <form id="form-debate">
+        <label for="usuario">Tu nombre (opcional)</label>
         <input 
           type="text" 
           id="usuario" 
           placeholder="Tu nombre (opcional)" 
           maxlength="50">
-        <textarea id="comentario" placeholder="Escribe tu opinión aquí..." required></textarea>
+        
+        <label for="comentario">Tu opinión</label>
+        <textarea 
+          id="comentario" 
+          placeholder="Comparte tu opinión sobre el tema de la semana..." 
+          required 
+          maxlength="500"></textarea>
+        
         <button type="submit">Comentar</button>
       </form>
+      
     </section>
   </main>
   <script type="module" src="debate.js"></script>
