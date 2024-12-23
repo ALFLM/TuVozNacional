@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 // Inicializa Firebase
@@ -27,17 +27,21 @@ onAuthStateChanged(auth, (user) => {
 
 // Cargar datos de perfil
 async function loadUserProfile(uid) {
-  const userDoc = doc(db, "usuarios", uid);
-  const docSnap = await getDoc(userDoc);
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    document.getElementById("nombre").value = data.nombre || '';
-    document.getElementById("intereses").value = data.intereses || '';
-    document.getElementById("vision").value = data.vision || '';
-    document.getElementById("cambios").value = data.cambios || '';
-    document.getElementById("accion").value = data.accion || '';
-  } else {
-    console.log("No se encontró el perfil del usuario");
+  try {
+    const userDoc = doc(db, "usuarios", uid);
+    const docSnap = await getDoc(userDoc);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      document.getElementById("nombre").value = data.nombre || '';
+      document.getElementById("intereses").value = data.intereses || '';
+      document.getElementById("vision").value = data.vision || '';
+      document.getElementById("cambios").value = data.cambios || '';
+      document.getElementById("accion").value = data.accion || '';
+    } else {
+      console.log("No se encontró el perfil del usuario");
+    }
+  } catch (error) {
+    console.error("Error al cargar el perfil del usuario:", error);
   }
 }
 
